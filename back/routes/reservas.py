@@ -1,0 +1,132 @@
+from flask import Blueprint, jsonify, request
+from db import get_db_connection
+
+reservas_bp = Blueprint('reservas', __name__)
+
+@reservas_bp.route('/reservas', methods=['GET'])
+def mostrar_reservas():
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    query = "SELECT * FROM reservas"
+
+    cursor.execute(query)
+
+    reservas = cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+
+    return jsonify(reservas)
+
+
+@reservas_bp.route('/reservas/<int:id>', methods=['GET'])
+def mostrar_reserva_id(id):
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    query = "SELECT * FROM reservas WHERE id_reserva = %s"
+
+    cursor.execute(query, (id,))
+
+    reserva = cursor.fetchone()
+
+    cursor.close()
+    conn.close()
+
+    if reserva:
+        return jsonify(reserva)
+
+    return jsonify({
+        "message": "Reserva no encontrada"
+    }), 404
+
+
+@reservas_bp.route('/reservas', methods=['POST'])
+def crear_reserva():
+
+    data = request.get_json()
+
+    usuario = data.get('usuario')
+    fecha_reserva = data.get('fecha_reserva')
+
+    if not usuario or not fecha_reserva:
+        return jsonify({
+            'message': 'Faltan datos para crear la reserva'
+        }), 400
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    query = """
+    INSERT INTO reservas (usuario, fecha_reserva)
+    VALUES (%s, %s)
+    """
+
+    cursor.execute(query, (usuario, fecha_reserva))
+
+    conn.commit()
+
+    cursor.close()
+    conn.close()
+
+    return jsonify({
+        'message': 'Reserva creada exitosamente'
+    }), 201
+
+
+@reservas_bp.route('/reservas/<int:id>', methods=['PUT'])
+def actualizar_reserva(id):
+
+    data = request.get_json()
+
+    usuario = data.get('usuario')
+    fecha_reserva = data.get('fecha_reserva')
+
+    if not usuario or not fecha_reserva:
+        return jsonify({
+            'message': 'Faltan datos para actualizar la reserva'
+        }), 400
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    query = """
+    UPDATE reservas
+    SET usuario = %s, fecha_reserva = %s
+    WHERE id_reserva = %s
+    """
+
+    cursor.execute(query, (usuario, fecha_reserva, id))
+
+    conn.commit()
+
+    cursor.close()
+    conn.close()
+
+    return jsonify({
+        'message': 'Reserva actualizada exitosamente'
+    }), 200
+
+
+
+@reservas_bp.route('/reservas/<int:id>', methods=['DELETE'])
+def eliminar_reserva(id):
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    query = "DELETE FROM reservas WHERE id_reserva = %s"
+
+    cursor.execute(query, (id,))
+
+    conn.commit()
+
+    cursor.close()
+    conn.close()
+
+    return jsonify({
+        'message': 'Reserva eliminada exitosamente'
+    }), 200

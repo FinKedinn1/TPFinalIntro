@@ -1,0 +1,217 @@
+openapi: 3.0.0
+
+info:
+  title: API Restaurante Medieval
+  version: 1.0.0
+  description: API REST para gestionar menú, usuarios, reservas y reseñas.
+
+servers:
+  - url: http://127.0.0.1:5000
+
+paths:
+
+  /menu:
+    get:
+      summary: Obtener menú completo
+      responses:
+        '200':
+          description: Lista de platos
+
+  /usuarios:
+    get:
+      summary: Obtener todos los usuarios
+      responses:
+        '200':
+          description: Lista de usuarios
+
+    post:
+      summary: Crear un usuario
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nombre:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+
+      responses:
+        '201':
+          description: Usuario creado correctamente
+
+  /usuarios/{id}:
+    get:
+      summary: Obtener usuario por ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+
+      responses:
+        '200':
+          description: Usuario encontrado
+
+    put:
+      summary: Actualizar usuario
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nombre:
+                  type: string
+                email:
+                  type: string
+
+      responses:
+        '200':
+          description: Usuario actualizado
+
+    delete:
+      summary: Eliminar usuario
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+
+      responses:
+        '200':
+          description: Usuario eliminado
+
+  /reservas:
+    get:
+      summary: Obtener reservas
+      responses:
+        '200':
+          description: Lista de reservas
+
+    post:
+      summary: Crear reserva
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                usuario:
+                  type: string
+                fecha_reserva:
+                  type: string
+                  format: date-time
+
+      responses:
+        '201':
+          description: Reserva creada
+
+  /reservas/{id}:
+    get:
+      summary: Obtener reserva por ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+
+      responses:
+        '200':
+          description: Reserva encontrada
+
+    put:
+      summary: Actualizar reserva
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                usuario:
+                  type: string
+                fecha_reserva:
+                  type: string
+                  format: date-time
+
+      responses:
+        '200':
+          description: Reserva actualizada
+
+    delete:
+      summary: Eliminar reserva
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+
+      responses:
+        '200':
+          description: Reserva eliminada
+
+  /reseñas:
+    get:
+      summary: Obtener reseñas
+      responses:
+        '200':
+          description: Lista de reseñas
+
+    post:
+      summary: Crear reseña
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id_reserva:
+                  type: integer
+                comentario:
+                  type: string
+                puntaje:
+                  type: integer
+
+      responses:
+        '201':
+          description: Reseña creada
+
+  /reseñas/{id}:
+    delete:
+      summary: Eliminar reseña
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+
+      responses:
+        '200':
+          description: Reseña eliminada

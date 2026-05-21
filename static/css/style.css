@@ -1,0 +1,159 @@
+body {
+    background-color: #1a120b;
+    color: #f5e6c8;
+    font-family: 'Cinzel', serif;
+    line-height: 1.6;
+    margin: 0;
+}
+
+header {
+    height: 100vh;
+    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.7));
+      /* CHIQUES aca va la url de la imagwn que pongamos para el header como quedamos :) */
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    margin-top: 50px;
+}
+
+h1 {
+    color: #d4a017;
+    font-family: 'MedievalSharp', cursive;
+    font-size: 5rem;
+    text-shadow: 3px 3px 10px black;
+    margin: 0;
+}
+
+header p {
+    font-size: 1.3rem;
+    max-width: 700px;
+    margin-top: 20px;
+}
+
+nav {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    padding: 15px 0;
+}
+
+nav ul {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin: 0;
+    padding: 0%;
+}
+
+nav a {
+    color: #f5e6c8;
+    text-decoration: none;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+nav a:hover {
+    color: #d4a017;
+}
+
+section {
+    padding: 80px 10%;
+}
+
+.titulo {
+    text-align: center;
+    margin-bottom: 40px;
+    font-family: 'MedievalSharp', cursive;
+    color: #d4a017;
+    font-size: 2.5rem;
+}
+
+.menu-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 30px;
+    padding: 60px 20px; 
+    background-color: #1a120b; 
+}
+
+.card {
+    background-color: #2b1f14;
+    border: 2px solid #4a3525;
+    border-radius: 4px;
+    width: 300px;
+    padding: 25px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.7);
+    position: relative;
+}
+
+
+
+.card-content {
+    padding: 20px;
+}
+
+.card-content h3 {
+    color: #d4a017;
+    margin-bottom: 10px;
+}
+
+/*
+.plato-card.destacado {
+    border:;
+    background-color: ;
+}
+
+.badge-popular {
+    background-color:;
+    color:;
+    font-family: ;
+    font-size: ;
+    letter-spacing: ;
+    padding: ;
+    position: ;
+    top:;
+    right: ; 
+    border-radius: ;
+    box-shadow:;
+}
+
+.categoria {
+    color:;
+    font-size: ;
+    letter-spacing: ;
+    margin-bottom: ;
+}
+
+.precio {
+    font-size: ;
+    color: ;
+    font-weight: ;
+    margin-bottom: ;
+    margin-top: ;
+}
+
+.boton-ordenar {
+    background-color: ;
+    color: ;
+    border: ;
+    padding: ;
+    font-weight: ;
+    cursor: ;
+    width: ;
+    border-radius: ;
+    font-family: ;
+}
+
+.boton-ordenar:hover {
+    background-color: ;
+}
+
+estructura preparada para continuar el css cuando este listo en el html :)
+
+*/

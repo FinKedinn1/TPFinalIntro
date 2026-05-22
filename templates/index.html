@@ -5,15 +5,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>La Taberna del Dragón</title>
-  <link rel="stylesheet" href="{{url_for('static'/css/styles.css)}}">
+  <link rel="stylesheet" href="{{url_for('static', filename='css/style.css', _external=True)}}">
 </head>
 
 <body>
 
   <nav>
     <ul>
-      <li><a href="#inicio">Inicio</a></li>
-      <li><a href="{{url_for('menu')"}}>Menú</a></li> <!--añadir en el app.py decorador route, tiene que devolver -->
+      <li><a href="#inicio">Inicio</a></li> <!--guille:tal vez esta parte tambien se puedan jinjearizar (no lo se)-->
+      <li><a href="{{url_for('menu')}}">Menú</a></li> 
       <li><a href="#historia">Historia</a></li>
       <li><a href="#contacto">Contacto</a></li>
     </ul>
@@ -37,14 +37,14 @@
       <img src="https://images.unsplash.com/photo-1514933651103-005eec06c04b?q=80&w=1200&auto=format&fit=crop"
         alt="Taberna medieval">
 
-      <div class="about-text">
+      <div class="about-text"> <!---Anotacion Guille: parece no estar definido en ningun archivo css-->>
         <p>
           Desde hace más de 300 inviernos, la Taberna del Dragón recibe viajeros,
           mercenarios y nobles de todos los reinos. Inspirada en las antiguas
           posadas medievales, nuestra cocina mezcla tradición, fuego y leyendas.
         </p>
 
-        <p class="margen-superior"> <!--añadir clase en style.css-->
+        <p class="Formateo_parrafo"> 
           Cada rincón está diseñado para transportarte a la época de castillos,
           espadas y grandes banquetes.
         </p>
@@ -55,7 +55,7 @@
   <section id="contacto">
     <h2 class="titulo">Visítanos</h2>
 
-    <div class="centrado">  <!--añadir clase en style.css-->
+    <div class="informacion_contacto"> 
       <p> Reino de Buenos Aires - Calle de los Dragones 145</p>
       <p> +54 11 1234-5678</p>
       <p> Música medieval en vivo cada viernes</p>
@@ -71,3 +71,4 @@
 </body>
 
 </html>
+

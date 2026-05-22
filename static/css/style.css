@@ -65,14 +65,25 @@ section {
     padding: 80px 10%;
 }
 
+.Formateo_parrafo {
+     margin-bottom: 20 px;
+}
+
 .titulo {
     text-align: center;
     margin-bottom: 40px;
     font-family: 'MedievalSharp', cursive;
-    color: #d4a017;
+    color: #d47d26;
     font-size: 2.5rem;
 }
 
+.informacion_contacto {
+     text-align: center;
+     font-family: 'MedievalSharp', cursive;
+     color: #323232;
+     font-size: medium;
+
+}
 .menu-grid {
     display: flex;
     flex-wrap: wrap;

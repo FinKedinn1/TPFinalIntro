@@ -6,18 +6,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Menú - La Taberna del Dragón</title>
     <!-- Hojas de estilo modularizadas -->
-    <link rel="stylesheet" href="static/css/styles.css">
-    <link rel="stylesheet" href="static/css/menu.css">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/style.css', _external=True)}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/menu.css', _external=True)}}">
 </head>
 
 <body>
 
     <!-- Barra de Navegación Medieval -->
     <nav>
-        <a href="index.html" class="nav-logo">🏰 La Taberna del Dragón</a>
+        <a href="{{url_for('index')}}" class="nav-logo">🏰 La Taberna del Dragón</a>
         <ul>
-            <li><a href="index.html#inicio">Inicio</a></li>
-            <li><a href="Menu.html" style="color: var(--primary-gold);">Menú</a></li>
+            <li><a href="index.html#inicio">Inicio</a></li> <!--guille:tal vez esta parte tambien se puede jinjerizar lo de las ids-->
+            <li><a href="{{url_for('menu')}}" style="color: var(--primary-gold);">Menú</a></li>
             <li><a href="index.html#historia">Historia</a></li>
             <li><a href="index.html#contacto">Contacto</a></li>
         </ul>
@@ -47,7 +47,7 @@
     </div>
 
     <!-- Contenedor del Menú Dinámico -->
-    <section style="padding: 20px 8% 80px 8%;">
+    <section class="seccion_menu">
         <div id="menu-container" class="menu-grid">
             <!-- Cargado dinámicamente mediante Javascript -->
         </div>
@@ -59,7 +59,8 @@
     </footer>
 
     <!-- Lógica de Conexión a Backend y Filtros Interactivos -->
-    <script src="static/js/menu.js"></script>
+    <script src="{{url_for('static', filename='js/menu.js', _external=True)}}"></script>
 </body>
 
 </html>
+

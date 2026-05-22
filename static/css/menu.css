@@ -258,6 +258,10 @@
   margin-bottom: 20px;
 }
 
+.seccion_menu {
+  padding: 20px 8% 80px 8%;
+}
+
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
@@ -287,3 +291,4 @@
 .toast.show {
   right: 20px;
 }
+

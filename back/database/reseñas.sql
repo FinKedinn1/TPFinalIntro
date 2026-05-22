@@ -6,8 +6,8 @@ CREATE TABLE IF NOT EXISTS reseñas (
     id_reseña INT AUTO_INCREMENT PRIMARY KEY,
     id_reserva INT NOT NULL,
     fecha DATETIME DEFAULT CURRENT_TIMESTAMP,
-    comentario TEXT NOT NULL,
-    puntaje INT CHECK (puntaje >= 1 AND puntaje <= 5),
+    comentario VARCHAR(255),
+    puntaje_estrellas INT CHECK (puntaje_estrellas >= 1 AND puntaje_estrellas <= 5),
     FOREIGN KEY (id_reserva)
     REFERENCES reservas(id_reserva)
 );

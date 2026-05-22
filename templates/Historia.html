@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Historia - La Taberna del Dragón</title>
+  <link rel="stylesheet" href="{{url_for('static', filename='css/style.css', _external=True)}}">
+  <style>
+    .story-section {
+      background: linear-gradient(rgba(26, 18, 11, 0.95), rgba(26, 18, 11, 0.95)), 
+                  url('https://images.unsplash.com/photo-1599740831666-880034a74332?q=80&w=1200&auto=format&fit=crop');
+      background-size: cover;
+      background-position: center;
+      padding: 60px 5%;
+    }
+    .history-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      margin-top: 40px;
+      align-items: center;
+    }
+    .history-img {
+      width: 100%;
+      height: 450px;
+      object-fit: cover;
+      border: 3px solid #b89158;
+      border-radius: 8px;
+      box-shadow: var(--shadow-medieval);
+    }
+    @media (max-width: 768px) {
+      .history-grid {
+        grid-template-columns: 1fr;
+      }
+      .history-img {
+        height: 300px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Barra de Navegación Medieval Unificada -->
+  <nav>
+    <a href="{{url_for('index')}}" class="nav-logo">La Taberna del Dragón</a>
+    <ul>
+      <li><a href="{{url_for('index')}}">Inicio</a></li>
+      <li><a href="{{url_for('menu')}}">Menú</a></li>
+      <li><a href="{{url_for('historia')}}">Historia</a></li>
+      <li><a href="{{url_for('contacto')}}">Contacto</a></li>
+      <li><a href="{{url_for('rankin')}}">Rankin</a></li>
+    </ul>
+  </nav>
+
+  <!-- Encabezado de Historia -->
+  <header style="background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(26, 18, 11, 0.95)), url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=1600&auto=format&fit=crop');">
+    <h1>Nuestra Leyenda</h1>
+    <p>Conoce los orígenes de la taberna que ha resistido asedios, dragones y el paso de los tiempos.</p>
+  </header>
+
+  <!-- Cuerpo de Historia / Pergamino -->
+  <section class="story-section">
+    <div class="parchment-card">
+      <h2 style="text-align: center; font-size: 2.2rem; margin-top: 0;">Las Crónicas de la Taberna</h2>
+      
+      <p style="font-size: 1.15rem; line-height: 1.8; text-indent: 30px;" class="Formateo_parrafo">
+        En el año 1726 de la Primera Era, tras el gran asedio de la Fortaleza de Invierno, el legendario caballero de la mesa redonda, <strong>Sir Galahad el Hambriento</strong>, decidió colgar su espada. Cansado de batallas pero deseoso de seguir uniendo a los pueblos, fundó un refugio seguro a las afueras de los bosques reales.
+      </p>
+
+      <p style="font-size: 1.15rem; line-height: 1.8; text-indent: 30px; margin-top: 15px;" class="Formateo_parrafo">
+        La leyenda cuenta que durante el segundo invierno, un majestuoso Dragón de Fuego Rojo descendió sobre el tejado. En lugar de reducir la posada a cenizas, el olor del asado de jabalí salvaje que Sir Galahad preparaba en la gran hoguera apaciguó a la bestia. El dragón sopló una suave flama dorada que encendió las brasas eternas de la cocina, las cuales, según los bardos, siguen ardiendo hoy en día. Así nació el nombre: <strong>La Taberna del Dragón</strong>.
+      </p>
+
+      <div class="history-grid">
+        <div>
+          <h3 style="font-size: 1.5rem; margin-top: 0;">Tres Siglos de Fuego Tradicional</h3>
+          <p style="font-size: 1.05rem; line-height: 1.7;" class="Formateo_parrafo">
+            Nuestras recetas se transmiten de tabernero a tabernero en el sagrado <em>"Pergamino del Rey"</em>. Cocinamos únicamente con leña de roble antiguo y carbón del bosque susurrante, garantizando el sabor ahumado característico que deleitó a reyes y mercenarios por igual.
+          </p>
+          <p style="font-size: 1.05rem; line-height: 1.7; margin-top: 10px;" class="Formateo_parrafo">
+            Hoy en día, bajo la dirección de la décima generación de taberneros, seguimos abriendo nuestras robustas puertas de madera a cada viajero cansado que busca un jarro de hidromiel frío, un plato de guiso reconfortante y una buena historia que cantar.
+          </p>
+        </div>
+        <img class="history-img" src="https://images.unsplash.com/photo-1599740831666-880034a74332?q=80&w=1200&auto=format&fit=crop" alt="Taberna medieval interior">
+      </div>
+
+      <div style="text-align: center; margin-top: 40px;">
+        <p style="font-style: italic; font-weight: bold; font-size: 1.1rem; color: #4a2e1b;">
+          "Bajo este techo no hay extraños, solo amigos que aún no han brindado juntos." <br>
+          — Ley del Tabernero, Art. I
+        </p>
+        <a href="{{url_for('menu')}}" class="btn" style="background-color: #4a2e1b; color: #eedcb3; border-color: #362010; display: inline-block; margin-top: 20px;">Ver los Banquetes</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pie de Página -->
+  <footer>
+    <p>La Taberna del Dragón - Todos los derechos reservados</p>
+  </footer>
+
+</body>
+
+</html>

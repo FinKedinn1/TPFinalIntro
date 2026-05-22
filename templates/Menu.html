@@ -12,14 +12,15 @@
 
 <body>
 
-    <!-- Barra de Navegación Medieval -->
+    <!-- Barra de Navegación Medieval Unificada -->
     <nav>
-        <a href="{{url_for('index')}}" class="nav-logo">🏰 La Taberna del Dragón</a>
+        <a href="{{url_for('index')}}" class="nav-logo">La Taberna del Dragón</a>
         <ul>
-            <li><a href="index.html#inicio">Inicio</a></li> <!--guille:tal vez esta parte tambien se puede jinjerizar lo de las ids-->
-            <li><a href="{{url_for('menu')}}" style="color: var(--primary-gold);">Menú</a></li>
-            <li><a href="index.html#historia">Historia</a></li>
-            <li><a href="index.html#contacto">Contacto</a></li>
+            <li><a href="{{url_for('index')}}">Inicio</a></li>
+            <li><a href="{{url_for('menu')}}">Menú</a></li>
+            <li><a href="{{url_for('historia')}}">Historia</a></li>
+            <li><a href="{{url_for('contacto')}}">Contacto</a></li>
+            <li><a href="{{url_for('rankin')}}">Rankin</a></li>
         </ul>
     </nav>
 
@@ -37,13 +38,13 @@
 
     <!-- Botones de Filtrado de Categorías -->
     <div class="filters-container">
-        <button class="filter-btn active" data-filter="all">⚔️ Todos los Banquetes</button>
-        <button class="filter-btn" data-filter="plato-principal">🍗 Platos Principales</button>
-        <button class="filter-btn" data-filter="entradas">🧀 Entradas</button>
-        <button class="filter-btn" data-filter="sopas">🍲 Sopas</button>
-        <button class="filter-btn" data-filter="bebidas">🍺 Bebidas</button>
-        <button class="filter-btn" data-filter="postres">🍰 Postres</button>
-        <button class="filter-btn" data-filter="vegetariano">🍃 Vegetariano</button>
+        <button class="filter-btn active" data-filter="all">Todos los Banquetes</button>
+        <button class="filter-btn" data-filter="plato-principal">Platos Principales</button>
+        <button class="filter-btn" data-filter="entradas">Entradas</button>
+        <button class="filter-btn" data-filter="sopas">Sopas</button>
+        <button class="filter-btn" data-filter="bebidas">Bebidas</button>
+        <button class="filter-btn" data-filter="postres">Postres</button>
+        <button class="filter-btn" data-filter="vegetariano">Vegetariano</button>
     </div>
 
     <!-- Contenedor del Menú Dinámico -->
@@ -55,7 +56,7 @@
 
     <!-- Pie de Página -->
     <footer>
-        <p>⚔️ La Taberna del Dragón - Todos los derechos reservados ⚔️</p>
+        <p>La Taberna del Dragón - Todos los derechos reservados</p>
     </footer>
 
     <!-- Lógica de Conexión a Backend y Filtros Interactivos -->
@@ -63,4 +64,3 @@
 </body>
 
 </html>
-

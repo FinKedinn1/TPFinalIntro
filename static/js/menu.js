@@ -156,7 +156,7 @@ function inicializarMenu() {
                 currentMenuItems = data.map(item => normalizeItem(item));
                 
                 // Mostrar indicador de conexión exitosa
-                actualizarIndicador(indicator, 'success', '🛡️ Conectado al Pergamino del Rey (Backend Activo)');
+                actualizarIndicador(indicator, 'success', '[Conectado] Conectado al Pergamino del Rey (Backend Activo)');
             } catch (parseError) {
                 console.error('Error parseando JSON del backend:', parseError);
                 cargarMenuLocal(indicator);
@@ -186,7 +186,7 @@ function inicializarMenu() {
 // Carga los banquetes locales en caso de error o backend inactivo
 function cargarMenuLocal(indicator) {
     currentMenuItems = LOCAL_MENU;
-    actualizarIndicador(indicator, 'warning', '📜 Conexión con el Reino inestable (Usando registros locales de la taberna)');
+    actualizarIndicador(indicator, 'warning', '[Conexión Local] Conexión con el Reino inestable (Usando registros locales de la taberna)');
     mostrarToast('Conexión con el backend fallida. Cargando banquetes locales.');
 }
 
@@ -241,7 +241,7 @@ function renderizarPlatos(platos, container) {
         const formattedPrice = new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS', minimumFractionDigits: 0 }).format(plato.precio);
 
         card.innerHTML = `
-            ${plato.popular ? `<div class="badge-popular">⚔️ Popular</div>` : ''}
+            ${plato.popular ? `<div class="badge-popular">Popular</div>` : ''}
             <div class="card-img-container">
                 <img src="${plato.imagen}" alt="${plato.nombre}" onerror="this.src='https://images.unsplash.com/photo-1514933651103-005eec06c04b?q=80&w=1200'">
             </div>

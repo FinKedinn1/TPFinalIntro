@@ -51,8 +51,9 @@ def crear_reserva():
 
     usuario = data.get('usuario')
     fecha_reserva = data.get('fecha_reserva')
+    cant_personas = data.get('cant_personas')
 
-    if not usuario or not fecha_reserva:
+    if not usuario or not fecha_reserva or not cant_personas:
         return jsonify({
             'message': 'Faltan datos para crear la reserva'
         }), 400
@@ -61,11 +62,11 @@ def crear_reserva():
     cursor = conn.cursor()
 
     query = """
-    INSERT INTO reservas (usuario, fecha_reserva)
-    VALUES (%s, %s)
+    INSERT INTO reservas (usuario, fecha_reserva, cant_personas)
+    VALUES (%s, %s, %s)
     """
 
-    cursor.execute(query, (usuario, fecha_reserva))
+    cursor.execute(query, (usuario, fecha_reserva, cant_personas))
 
     conn.commit()
 
@@ -84,8 +85,9 @@ def actualizar_reserva(id):
 
     usuario = data.get('usuario')
     fecha_reserva = data.get('fecha_reserva')
+    cant_personas = data.get('cant_personas')
 
-    if not usuario or not fecha_reserva:
+    if not usuario or not fecha_reserva or not cant_personas:
         return jsonify({
             'message': 'Faltan datos para actualizar la reserva'
         }), 400
@@ -95,11 +97,11 @@ def actualizar_reserva(id):
 
     query = """
     UPDATE reservas
-    SET usuario = %s, fecha_reserva = %s
+    SET usuario = %s, fecha_reserva = %s, cant_personas = %s
     WHERE id_reserva = %s
     """
 
-    cursor.execute(query, (usuario, fecha_reserva, id))
+    cursor.execute(query, (usuario, fecha_reserva, cant_personas, id))
 
     conn.commit()
 

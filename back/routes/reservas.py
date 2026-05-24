@@ -9,7 +9,7 @@ def mostrar_reservas():
     conn = get_db_connection()
     cursor = conn.cursor()
 
-    query = "SELECT * FROM reservas"
+    query = "SELECT reservas.*,usuarios.nombre FROM reservas JOIN usuarios ON reservas.id_usuario = usuarios.id_usuario"
 
     cursor.execute(query)
 
@@ -27,7 +27,7 @@ def mostrar_reserva_id(id):
     conn = get_db_connection()
     cursor = conn.cursor()
 
-    query = "SELECT * FROM reservas WHERE id_reserva = %s"
+    query = "SELECT reservas.*,usuarios.nombre FROM reservas JOIN usuarios ON reservas.id_usuario = usuarios.id_usuario WHERE id_reserva = %s"
 
     cursor.execute(query, (id,))
 
@@ -49,11 +49,11 @@ def crear_reserva():
 
     data = request.get_json()
 
-    usuario = data.get('usuario')
+    id_usuario = data.get('id_usuario')
     fecha_reserva = data.get('fecha_reserva')
     cant_personas = data.get('cant_personas')
 
-    if not usuario or not fecha_reserva or not cant_personas:
+    if not id_usuario or not fecha_reserva or not cant_personas:
         return jsonify({
             'message': 'Faltan datos para crear la reserva'
         }), 400
@@ -62,11 +62,11 @@ def crear_reserva():
     cursor = conn.cursor()
 
     query = """
-    INSERT INTO reservas (usuario, fecha_reserva, cant_personas)
+    INSERT INTO reservas (id_usuario, fecha_reserva, cant_personas)
     VALUES (%s, %s, %s)
     """
 
-    cursor.execute(query, (usuario, fecha_reserva, cant_personas))
+    cursor.execute(query, (id_usuario, fecha_reserva, cant_personas))
 
     conn.commit()
 
@@ -83,11 +83,11 @@ def actualizar_reserva(id):
 
     data = request.get_json()
 
-    usuario = data.get('usuario')
+    id_usuario = data.get('id_usuario')
     fecha_reserva = data.get('fecha_reserva')
     cant_personas = data.get('cant_personas')
 
-    if not usuario or not fecha_reserva or not cant_personas:
+    if not id_usuario or not fecha_reserva or not cant_personas:
         return jsonify({
             'message': 'Faltan datos para actualizar la reserva'
         }), 400
@@ -97,11 +97,11 @@ def actualizar_reserva(id):
 
     query = """
     UPDATE reservas
-    SET usuario = %s, fecha_reserva = %s, cant_personas = %s
+    SET id_usuario = %s, fecha_reserva = %s, cant_personas = %s
     WHERE id_reserva = %s
     """
 
-    cursor.execute(query, (usuario, fecha_reserva, cant_personas, id))
+    cursor.execute(query, (id_usuario, fecha_reserva, cant_personas, id))
 
     conn.commit()
 

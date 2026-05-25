@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}
+Menu - La Taberna del Dragón
+{% endblock %}
+
+{% block content %}
+<body>
+    <header class="menu-header">
+        <h1>Menu Medieval</h1>
+        <p>Elige tu festín. Servimos los platos más sabrosos de los siete reinos.</p>
+    </header>
+
+    <div class="filters-container">
+        <button class="filter-btn active" data-filter="all">Todos los Banquetes</button>
+        <button class="filter-btn" data-filter="plato-principal">Plato Principal</button>
+        <button class="filter-btn" data-filter="entrada">Entrada</button>
+        <button class="filter-btn" data-filter="bebida">Bebida</button>
+        <button class="filter-btn" data-filter="postre">Postre</button>
+    </div>
+
+    <script src="{{url_for('static', filename='js/menu.js', _external=True)}}"></script>
+</body>
+
+{%endblock%}

@@ -1,66 +1,25 @@
-<!DOCTYPE html>
-<html lang="es">
+{% extends "base.html" %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Menú - La Taberna del Dragón</title>
-    <!-- Hojas de estilo modularizadas -->
-    <link rel="stylesheet" href="{{url_for('static', filename='css/style.css', _external=True)}}">
-    <link rel="stylesheet" href="{{url_for('static', filename='css/menu.css', _external=True)}}">
-</head>
+{% block title %}
+Menu - La Taberna del Dragón
+{% endblock %}
 
+{% block content %}
 <body>
-
-    <!-- Barra de Navegación Medieval Unificada -->
-    <nav>
-        <a href="{{url_for('index')}}" class="nav-logo">La Taberna del Dragón</a>
-        <ul>
-            <li><a href="{{url_for('index')}}">Inicio</a></li>
-            <li><a href="{{url_for('menu')}}">Menú</a></li>
-            <li><a href="{{url_for('historia')}}">Historia</a></li>
-            <li><a href="{{url_for('contacto')}}">Contacto</a></li>
-            <li><a href="{{url_for('rankin')}}">Rankin</a></li>
-        </ul>
-    </nav>
-
-    <!-- Encabezado del Menú -->
     <header class="menu-header">
-        <h1>Banquetes del Reino</h1>
-        <p>Elige tu festín, noble guerrero. Servimos los platos más sabrosos de los siete reinos.</p>
+        <h1>Menu Medieval</h1>
+        <p>Elige tu festín. Servimos los platos más sabrosos de los siete reinos.</p>
     </header>
 
-    <!-- Indicador de conexión con Backend (API) -->
-    <div id="api-status-indicator" class="api-indicator warning">
-        <span class="indicator-dot"></span>
-        <span>Consultando el Pergamino del Rey...</span>
-    </div>
-
-    <!-- Botones de Filtrado de Categorías -->
     <div class="filters-container">
         <button class="filter-btn active" data-filter="all">Todos los Banquetes</button>
-        <button class="filter-btn" data-filter="plato-principal">Platos Principales</button>
-        <button class="filter-btn" data-filter="entradas">Entradas</button>
-        <button class="filter-btn" data-filter="sopas">Sopas</button>
-        <button class="filter-btn" data-filter="bebidas">Bebidas</button>
-        <button class="filter-btn" data-filter="postres">Postres</button>
-        <button class="filter-btn" data-filter="vegetariano">Vegetariano</button>
+        <button class="filter-btn" data-filter="plato-principal">Plato Principal</button>
+        <button class="filter-btn" data-filter="entrada">Entrada</button>
+        <button class="filter-btn" data-filter="bebida">Bebida</button>
+        <button class="filter-btn" data-filter="postre">Postre</button>
     </div>
 
-    <!-- Contenedor del Menú Dinámico -->
-    <section class="seccion_menu">
-        <div id="menu-container" class="menu-grid">
-            <!-- Cargado dinámicamente mediante Javascript -->
-        </div>
-    </section>
-
-    <!-- Pie de Página -->
-    <footer>
-        <p>La Taberna del Dragón - Todos los derechos reservados</p>
-    </footer>
-
-    <!-- Lógica de Conexión a Backend y Filtros Interactivos -->
     <script src="{{url_for('static', filename='js/menu.js', _external=True)}}"></script>
 </body>
 
-</html>
+{%endblock%}

@@ -1,13 +1,13 @@
 from flask import  Blueprint, jsonify, request
 from db import get_db_connection
 
-menu_bp = Blueprint("menu",__name__)
+carta_bp = Blueprint("carta",__name__)
 
-@menu_bp.route("/menu", methods=["GET"])
-def mostrar_menu():
+@carta_bp.route("/carta", methods=["GET"])
+def mostrar_carta():
     connection = get_db_connection()
     cursor = connection.cursor()
-    query = "SELECT * FROM menu"
+    query = "SELECT * FROM carta"
 
     cursor.execute(query)
     menu = cursor.fetchall()
@@ -16,13 +16,13 @@ def mostrar_menu():
 
     return jsonify(menu)
 
-@menu_bp.route("/menu/<int:id>", methods=["GET"])
+@carta_bp.route("/menu/<int:id>", methods=["GET"])
 def mostrar_plato(id):
 
     connection = get_db_connection()
     cursor = connection.cursor()
 
-    query = "SELECT * FROM menu WHERE id_menu = %s"
+    query = "SELECT * FROM menu WHERE id_carta = %s"
     cursor.execute(query, (id,))
     plato = cursor.fetchone()
     cursor.close()
@@ -34,24 +34,11 @@ def mostrar_plato(id):
         "error": "Plato no encontrado"
     }), 404
 
-@menu_bp.route("/menu/populares", methods=["GET"])
-def platos_populares():
-
-    connection = get_db_connection()
-    cursor = connection.cursor()
-    query = "SELECT * FROM menu WHERE popular = TRUE"
-    cursor.execute(query)
-    resultado = cursor.fetchall()
-    cursor.close()
-    connection.close()
-
-    return jsonify(resultado)
-
-@menu_bp.route("/menu/categoria/<categoria>", methods=["GET"])
+@carta_bp.route("/carta/categoria/<categoria>", methods=["GET"])
 def categoria_plato(categoria):
     connection = get_db_connection()
     cursor = connection.cursor()
-    query = "SELECT * FROM menu WHERE categoria = %s"
+    query = "SELECT * FROM carta WHERE categoria = %s"
     cursor.execute(query, (categoria,))
     resultado = cursor.fetchall()
     cursor.close()

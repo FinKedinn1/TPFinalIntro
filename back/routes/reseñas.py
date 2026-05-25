@@ -23,9 +23,10 @@ def crear_reseña():
 
     id_reserva = data.get("id_reserva")
     comentario = data.get("comentario")
-    puntaje = data.get("puntaje")
+    puntaje = data.get("puntaje_estrellas")
+    id_plato = data.get("id_plato")
 
-    obligatorio = ["id_reserva", "comentario", "puntaje"]
+    obligatorio = ["id_reserva", "comentario", "puntaje_estrellas", "id_plato"]
 
     for campo in obligatorio:
         if campo not in data:
@@ -46,9 +47,9 @@ def crear_reseña():
         connection.close()
         return{"Error": "La reserva no existe"}, 404
     
-    sql = "INSERT INTO reseñas (id_reserva, comentario, puntaje) VALUES (%s, %s, %s)"
+    sql = "INSERT INTO reseñas (id_reserva, comentario, puntaje_estrellas, id_plato) VALUES (%s, %s, %s, %s)"
 
-    cursor.execute(sql, (id_reserva,comentario,puntaje))
+    cursor.execute(sql, (id_reserva,comentario,puntaje, id_plato))
 
     connection.commit()
     cursor.close()

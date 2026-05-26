@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{% block title %}la taberna del dragon{% endblock %}</title>
+  <title>{% block title %}La taberna del dragon{% endblock %}</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css', _external=True) }}">
 </head>
 <body>
@@ -12,8 +12,9 @@
   <ul>
     <li><a href="{{ url_for('index') }}inicio">inicio</a></li>
     <li><a href="{{ url_for('menu') }}">menu</a></li>
-    <li><a href="{{ url_for('index') }}reseña">opiniones de usuarios</a></li>
     <li><a href="{{ url_for('registro') }}">registro</a></li>
+    <li>><a href="{{ url_for('reservaciones') }}">reservaciones</a></li>
+    <li><a href="{{ url_for('index') }}reseña">opiniones de usuarios</a></li>
     </ul>
   </nav>
 
@@ -31,7 +32,7 @@
       <p>+54 11 1234-5678</p>
       <p>Música medieval en vivo cada viernes</p>
 
-      <a href="index.html" class="btn-ordenar" style="display: inline-block; width: auto; text-decoration: none;">
+      <a href="reservas.html" class="btn-ordenar" style="display: inline-block; width: auto; text-decoration: none;">
         Reservar Mesa
       </a>
     </div>

@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, redirect, url_for, request 
 
 app = Flask(__name__)
 
@@ -13,6 +13,10 @@ def menu():
 @app.route("/registro")
 def registro():
     return render_template("registro.html")
+
+@app.route("/reservaciones")
+def reservaciones():
+    return render_template("reservas.html")
 
 if __name__ == "__main__":
     app.run("127.0.0.1", port=5000, debug=True)

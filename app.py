@@ -14,6 +14,10 @@ def menu():
 def registro():
     return render_template("registro.html")
 
+@app.route("/login")
+def login():
+    return render_template("login.html")
+
 @app.route("/reservaciones")
 def reservaciones():
     return render_template("reservas.html")

@@ -40,7 +40,7 @@ def mostrar_reserva_id(id):
         return jsonify(reserva)
 
     return jsonify({
-        "message": "Reserva no encontrada"
+        "Mensaje": "Reserva no encontrada"
     }), 404
 
 
@@ -55,27 +55,51 @@ def crear_reserva():
 
     if not id_usuario or not fecha_reserva or not cant_personas:
         return jsonify({
-            'message': 'Faltan datos para crear la reserva'
+            "Mensaje": "Faltan datos para crear la reserva"
         }), 400
 
     conn = get_db_connection()
     cursor = conn.cursor()
 
-    query = """
-    INSERT INTO reservas (id_usuario, fecha_reserva, cant_personas)
-    VALUES (%s, %s, %s)
-    """
+    try:
+        check = """
+        SELECT SUM(cant_personas) FROM reservas
+        WHERE DATE(fecha_reserva) = DATE(%s)
+        """
 
-    cursor.execute(query, (id_usuario, fecha_reserva, cant_personas))
+        cursor.execute(check, (fecha_reserva,))
+        resultado = cursor.fetchone()[0]
 
-    conn.commit()
+        capacidad_max = 60
 
-    cursor.close()
-    conn.close()
+        if (resultado or 0) + cant_personas > capacidad_max:
+            return jsonify ({
+                "Mensaje": "No hay disponibilidad para esta fecha"
+            }), 400
 
-    return jsonify({
-        'message': 'Reserva creada exitosamente'
-    }), 201
+        query = """
+        INSERT INTO reservas (id_usuario, fecha_reserva, cant_personas)
+        VALUES (%s, %s, %s)
+        """
+
+        cursor.execute(query, (id_usuario, fecha_reserva, cant_personas))
+
+        conn.commit()
+
+        cursor.close()
+        conn.close()
+
+        return jsonify({
+            "Mensaje": "Reserva creada exitosamente"
+        }), 201
+    
+    except Exception:
+        conn.rollback()
+        cursor.close()
+        conn.close()
+        return jsonify({
+            "Mensaje": "Error con la reserva"
+        }), 500
 
 
 @reservas_bp.route('/reservas/<int:id>', methods=['PUT'])
@@ -89,29 +113,54 @@ def actualizar_reserva(id):
 
     if not id_usuario or not fecha_reserva or not cant_personas:
         return jsonify({
-            'message': 'Faltan datos para actualizar la reserva'
+            "Mensaje": "Faltan datos para actualizar la reserva"
         }), 400
 
     conn = get_db_connection()
     cursor = conn.cursor()
+    
+    try:
+        #Valido la capacidad sin incluir la reserva actual
+        check = """
+        SELECT SUM(cant_personas) FROM reservas
+        WHERE DATE(fecha_reserva) = DATE(%s)
+        AND id_reserva != %s
+        """
 
-    query = """
-    UPDATE reservas
-    SET id_usuario = %s, fecha_reserva = %s, cant_personas = %s
-    WHERE id_reserva = %s
-    """
+        cursor.execute(check, (fecha_reserva, id))
+        resultado = cursor.fetchone()[0]
 
-    cursor.execute(query, (id_usuario, fecha_reserva, cant_personas, id))
+        capacidad_max = 60
 
-    conn.commit()
+        if (resultado or 0) + cant_personas > capacidad_max:
+            return jsonify ({
+                "Mensaje": "No hay disponibilidad para esta fecha"
+            }), 400
 
-    cursor.close()
-    conn.close()
+        query = """
+        UPDATE reservas
+        SET id_usuario = %s, fecha_reserva = %s, cant_personas = %s
+        WHERE id_reserva = %s
+        """
 
-    return jsonify({
-        'message': 'Reserva actualizada exitosamente'
-    }), 200
+        cursor.execute(query, (id_usuario, fecha_reserva, cant_personas, id))
 
+        conn.commit()
+
+        cursor.close()
+        conn.close()
+
+        return jsonify({
+            "Mensaje": "Reserva actualizada exitosamente"
+        }), 200
+    
+    except Exception:
+        conn.rollback()
+        cursor.close()
+        conn.close()
+        return jsonify({
+            "Mensaje": "Error con la reserva"
+        }), 500
 
 
 @reservas_bp.route('/reservas/<int:id>', methods=['DELETE'])
@@ -130,5 +179,5 @@ def eliminar_reserva(id):
     conn.close()
 
     return jsonify({
-        'message': 'Reserva eliminada exitosamente'
+        "Mensaje": "Reserva eliminada exitosamente"
     }), 200

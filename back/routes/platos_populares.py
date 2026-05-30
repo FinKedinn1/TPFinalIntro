@@ -4,7 +4,7 @@ from db import get_db_connection
 
 platos_populares_bp = Blueprint("platos_populares", __name__)
 
-UMBRAL_POPULARIDAD = 4.2
+UMBRAL_PROMEDIO = 4.2
 
 
 @platos_populares_bp.route("/menu/populares", methods=["GET"])
@@ -16,8 +16,7 @@ def platos_populares():
     SELECT
         carta.*,
         platos_populares.promedio_estrellas,
-        platos_populares.cantidad_reseñas,
-        platos_populares.es_popular
+        platos_populares.cantidad_reseñas
     FROM platos_populares
     INNER JOIN carta
         ON platos_populares.id_plato = carta.id_plato
@@ -52,17 +51,17 @@ def actualizar_platos_populares():
         )
         SELECT
             id_plato,
-            ROUND(AVG(puntaje_estrellas), 2),
+            ROUND(SUM(puntaje_estrellas) / COUNT(*), 2),
             COUNT(*),
             CASE
-                WHEN ROUND(AVG(puntaje_estrellas), 2) >= %s THEN TRUE
+                WHEN SUM(puntaje_estrellas) / COUNT(*) >= %s THEN TRUE
                 ELSE FALSE
             END
         FROM reseñas
         GROUP BY id_plato
         """
 
-        cursor.execute(query, (UMBRAL_POPULARIDAD,))
+        cursor.execute(query, (UMBRAL_PROMEDIO,))
         connection.commit()
 
     except Exception as error:

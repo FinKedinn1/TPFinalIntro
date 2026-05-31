@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS reseñas (
     comentario VARCHAR(255),
     puntaje_estrellas INT CHECK (puntaje_estrellas >= 1 AND puntaje_estrellas <= 5),
     FOREIGN KEY (id_reserva)
-    REFERENCES reservas(id_reserva)
+    REFERENCES reservas(id_reserva),
     FOREIGN KEY (id_plato)
     REFERENCES carta(id_plato)
 );

@@ -14,7 +14,7 @@ def mostrar_reservas():
     SELECT reservas.*,usuarios.nombre FROM reservas 
     JOIN usuarios ON reservas.id_usuario = usuarios.id_usuario
     WHERE reservas.estado = 'activa'
-    ORDER BY reservas.fecha_reserva, turno
+    ORDER BY reservas.fecha_reserva, reservas.turno
     """
 
     cursor.execute(query)
@@ -36,8 +36,8 @@ def mostrar_reserva_id(id):
     query = """
     SELECT reservas.*,usuarios.nombre FROM reservas 
     JOIN usuarios ON reservas.id_usuario = usuarios.id_usuario 
-    WHERE id_reserva = %s
-    AND estado = 'activa'
+    WHERE reservas.id_reserva = %s
+    AND reservas.estado = 'activa'
     """
 
     cursor.execute(query, (id,))
@@ -85,8 +85,8 @@ def ver_disponibilidad():
             ocupado = 0
 
             for resultado in resultados:
-                if resultado[0] == turno:
-                    ocupado = resultado[1] or 0
+                if resultado["turno"] == turno:
+                    ocupado = resultado["total"] or 0
 
             respuesta.append({
                 "turno": turno,
@@ -95,9 +95,10 @@ def ver_disponibilidad():
 
         return jsonify(respuesta), 200
 
-    except Exception:
+    except Exception as e:
         return jsonify({
-            "Mensaje": "Error al buscar la disponibilidad"
+            "Mensaje": "Error al buscar la disponibilidad",
+            "detalle": str(e)
         }), 500
     
     finally:
@@ -129,7 +130,8 @@ def crear_reserva():
     try:
         #Valido la disponibilidad
         check = """
-        SELECT SUM(cant_personas) FROM reservas
+        SELECT SUM(cant_personas) AS total
+        FROM reservas
         WHERE fecha_reserva = %s
         AND turno = %s
         AND estado = 'activa'
@@ -173,10 +175,11 @@ def crear_reserva():
             "id_reserva": id_reserva
         }), 201
     
-    except Exception:
+    except Exception as e:
         conn.rollback()
         return jsonify({
-            "Mensaje": "Error con la reserva"
+            "Mensaje": "Error con la reserva",
+            "detalle": str(e)
         }), 500
     
     finally:
@@ -205,7 +208,8 @@ def actualizar_reserva(id):
     try:
         #Valido la capacidad sin incluir la reserva actual
         check = """
-        SELECT SUM(cant_personas) FROM reservas
+        SELECT SUM(cant_personas) AS total
+        FROM reservas
         WHERE fecha_reserva = %s
         AND id_reserva != %s
         AND turno = %s
@@ -213,11 +217,12 @@ def actualizar_reserva(id):
         """
 
         cursor.execute(check, (fecha_reserva, id, turno))
-        resultado = cursor.fetchone()[0]
+        resultado = cursor.fetchone()
+        ocupado = resultado["total"] or 0
 
         capacidad_max = 60
 
-        if (resultado or 0) + cant_personas > capacidad_max:
+        if ocupado + cant_personas > capacidad_max:
             return jsonify ({
                 "Mensaje": "No hay disponibilidad para esta fecha"
             }), 400
@@ -236,10 +241,11 @@ def actualizar_reserva(id):
             "Mensaje": "Reserva actualizada exitosamente"
         }), 200
     
-    except Exception:
+    except Exception as e:
         conn.rollback()
         return jsonify({
-            "Mensaje": "Error con la reserva"
+            "Mensaje": "Error con la reserva",
+            "detalle": str(e)
         }), 500
 
     finally:
@@ -264,7 +270,7 @@ def cancelar_reserva(id):
         if not reserva:
             return jsonify({"Mensaje": "Reserva no encontrada"}), 404
         
-        if reserva[0] == "cancelada":
+        if reserva["estado"] == "cancelada":
             return jsonify({"Mensaje": "La reserva ya está cancelada"}), 400
         
         query = """
@@ -279,10 +285,11 @@ def cancelar_reserva(id):
             "Mensaje": "Reserva cancelada exitosamente"
         }), 200
 
-    except Exception:
+    except Exception as e:
         conn.rollback()
         return jsonify({
-            "Mensaje": "Error al cancelar la reserva"
+            "Mensaje": "Error al cancelar la reserva",
+            "detalle": str(e)
         }), 500
 
     finally:

@@ -9,5 +9,6 @@ CREATE TABLE IF NOT EXISTS reservas (
     turno VARCHAR(10) NOT NULL,
     fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     cant_personas INT NOT NULL,
+    estado VARCHAR(20) DEFAULT 'activa',
     FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario)
 );

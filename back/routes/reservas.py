@@ -1,5 +1,6 @@
 from flask import Blueprint, jsonify, request
 from db import get_db_connection
+import qrcode
 
 reservas_bp = Blueprint('reservas', __name__)
 
@@ -12,6 +13,7 @@ def mostrar_reservas():
     query = """
     SELECT reservas.*,usuarios.nombre FROM reservas 
     JOIN usuarios ON reservas.id_usuario = usuarios.id_usuario
+    WHERE reservas.estado = 'activa'
     ORDER BY reservas.fecha_reserva, turno
     """
 
@@ -31,9 +33,11 @@ def mostrar_reserva_id(id):
     conn = get_db_connection()
     cursor = conn.cursor()
 
-    query = """SELECT reservas.*,usuarios.nombre FROM reservas 
+    query = """
+    SELECT reservas.*,usuarios.nombre FROM reservas 
     JOIN usuarios ON reservas.id_usuario = usuarios.id_usuario 
     WHERE id_reserva = %s
+    AND estado = 'activa'
     """
 
     cursor.execute(query, (id,))
@@ -62,10 +66,12 @@ def ver_disponibilidad():
     cursor = conn.cursor()
 
     try:
+        #Consulto la capacidad en cada turno
         consulta = """
         SELECT turno, SUM(cant_personas)
         FROM reservas
         WHERE fecha_reserva = %s
+        AND estado = 'activa'
         GROUP BY turno
         """
 
@@ -121,10 +127,12 @@ def crear_reserva():
     cursor = conn.cursor()
 
     try:
+        #Valido la disponibilidad
         check = """
         SELECT SUM(cant_personas) FROM reservas
         WHERE fecha_reserva = %s
         AND turno = %s
+        AND estado = 'activa'
         """
 
         cursor.execute(check, (fecha_reserva, turno))
@@ -146,8 +154,23 @@ def crear_reserva():
 
         conn.commit()
 
+        id_reserva = cursor.lastrowid  #Obtengo el id de la reserva
+        
+        datos_qr = f"""
+            Reserva: {id_reserva}
+            Usuario: {id_usuario}
+            Fecha: {fecha_reserva}
+            Turno: {turno}
+            Personas: {cant_personas}
+        """
+
+        img = qrcode.make(datos_qr)  #Agarra el texto y lo convierte en un codigo qr(imagen)
+
+        img.save(f"qr_reserva_{id_reserva}.png")  #Lo guarda como archivo imagen
+
         return jsonify({
-            "Mensaje": "Reserva creada exitosamente"
+            "Mensaje": "Reserva creada exitosamente",
+            "id_reserva": id_reserva
         }), 201
     
     except Exception:
@@ -186,6 +209,7 @@ def actualizar_reserva(id):
         WHERE fecha_reserva = %s
         AND id_reserva != %s
         AND turno = %s
+        AND estado = 'activa'
         """
 
         cursor.execute(check, (fecha_reserva, id, turno))
@@ -222,21 +246,45 @@ def actualizar_reserva(id):
         cursor.close()
         conn.close()
 
-@reservas_bp.route('/reservas/<int:id>', methods=['DELETE'])
-def eliminar_reserva(id):
+@reservas_bp.route('/reservas/cancelar/<int:id>', methods=['PUT'])
+def cancelar_reserva(id):
 
     conn = get_db_connection()
     cursor = conn.cursor()
 
-    query = "DELETE FROM reservas WHERE id_reserva = %s"
+    try: 
+        check = """
+        SELECT estado FROM reservas
+        WHERE id_reserva = %s
+        """
 
-    cursor.execute(query, (id,))
+        cursor.execute(check, (id,))
+        reserva = cursor.fetchone()
 
-    conn.commit()
+        if not reserva:
+            return jsonify({"Mensaje": "Reserva no encontrada"}), 404
+        
+        if reserva[0] == "cancelada":
+            return jsonify({"Mensaje": "La reserva ya está cancelada"}), 400
+        
+        query = """
+        UPDATE reservas SET estado = 'cancelada'
+        WHERE id_reserva = %s
+        """
 
-    cursor.close()
-    conn.close()
+        cursor.execute(query, (id,))
+        conn.commit()
 
-    return jsonify({
-        "Mensaje": "Reserva eliminada exitosamente"
-    }), 200
+        return jsonify({
+            "Mensaje": "Reserva cancelada exitosamente"
+        }), 200
+
+    except Exception:
+        conn.rollback()
+        return jsonify({
+            "Mensaje": "Error al cancelar la reserva"
+        }), 500
+
+    finally:
+        cursor.close()
+        conn.close()

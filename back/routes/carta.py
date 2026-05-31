@@ -10,19 +10,19 @@ def mostrar_carta():
     query = "SELECT * FROM carta"
 
     cursor.execute(query)
-    menu = cursor.fetchall()
+    carta = cursor.fetchall()
     cursor.close()
     connection.close()
 
-    return jsonify(menu)
+    return jsonify(carta)
 
-@carta_bp.route("/menu/<int:id>", methods=["GET"])
+@carta_bp.route("/carta/<int:id>", methods=["GET"])
 def mostrar_plato(id):
 
     connection = get_db_connection()
     cursor = connection.cursor()
 
-    query = "SELECT * FROM menu WHERE id_carta = %s"
+    query = "SELECT * FROM carta WHERE id_plato = %s"
     cursor.execute(query, (id,))
     plato = cursor.fetchone()
     cursor.close()

@@ -18,7 +18,16 @@ Menu - La Taberna del Dragón
         <button class="filter-btn" data-filter="bebida">Bebida</button>
         <button class="filter-btn" data-filter="postre">Postre</button>
     </div>
-
+    <div id="contenedor-menu">
+    {% for plato in platos %}
+    <div class="carta-de-platos">
+        <h2>{{ plato.nombre_plato }}</h2>
+        <p>{{ plato.descripcion }}</p>
+        <p>{{ plato.precio }}</p>
+        <p>{{ plato.categoria }}</p>
+    </div>
+    {% endfor %}
+    </div>
     <script src="{{url_for('static', filename='js/menu.js', _external=True)}}"></script>
 </body>
 

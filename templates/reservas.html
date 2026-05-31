@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}Reservaciones - La Taberna del Dragón{% endblock %}
+
+{% block content %}
+
+<header class="reviews-header">
+    <h1>Reserva tu mesa</h1>
+    <p>Asegura tu lugar en la taberna medieval.</p>
+</header>
+
+<section class="reviews-header">
+    <div class="search-card">
+        <form method="POST" class="medieval-form">
+            
+            <div class="form-group">
+                <label for="fecha_reserva">Fecha y Hora: </label>
+                <input type="datetime-local" id="fecha_reserva" name="fecha_reserva" required>
+            </div>
+            <button type="submit">
+                Reservar mesa
+            </button>
+        </form>
+</section>
+
+{% endblock %}

@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}Reseñas{% endblock %}
+
+{% block content %}
+
+<header class="reviews-header">
+    <h1>Reseñas</h1>
+    <p>Compartí tu experiencia en la taberna medieval.</p>
+</header>
+
+<section class="reviews-section">
+
+    <div class="parchment-card">
+
+        <h2>Dejá tu reseña</h2>
+
+        <form method="POST" class="medieval-form">
+
+            <div class="form-group">
+                <label for="nombre">Nombre</label>
+
+                <input 
+                    type="text"
+                    id="nombre"
+                    name="nombre"
+                    placeholder="Ingresá tu nombre"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="comentario">Comentario</label>
+
+                <textarea
+                    id="comentario"
+                    name="comentario"
+                    placeholder="Contanos tu experiencia..."
+                    required
+                ></textarea>
+            </div>
+
+            <button type="submit">
+                Enviar reseña
+            </button>
+
+        </form>
+
+    </div>
+
+</section>
+
+{% endblock %}

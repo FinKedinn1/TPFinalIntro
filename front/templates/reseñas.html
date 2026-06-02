@@ -20,7 +20,7 @@
     <span class = "estrella" data-rating='4'>★</span>
     <span class = "estrella" data-rating='5'>★</span>
 
-        <form method="POST" class="medieval-form" action = "/">
+        <form id="form-reseña" class="medieval-form">
 
             <div class="form-group">
                 <label for="nombre">Nombre</label>
@@ -50,6 +50,8 @@
             </button>
         <script src="{{url_for('static', filename='js/reseñas.js', external=True)}}"></script>
         </form>
+
+        <div id="contenedor-reseñas"></div>
 
     </div>
 

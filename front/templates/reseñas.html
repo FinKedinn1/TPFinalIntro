@@ -14,8 +14,13 @@
     <div class="parchment-card">
 
         <h2>Dejá tu reseña</h2>
+    <span class = "estrella" data-rating='1'>★</span>
+    <span class = "estrella" data-rating='2'>★</span>
+    <span class = "estrella" data-rating='3'>★</span>
+    <span class = "estrella" data-rating='4'>★</span>
+    <span class = "estrella" data-rating='5'>★</span>
 
-        <form method="POST" class="medieval-form">
+        <form method="POST" class="medieval-form" action = "/">
 
             <div class="form-group">
                 <label for="nombre">Nombre</label>
@@ -43,7 +48,7 @@
             <button type="submit">
                 Enviar reseña
             </button>
-
+        <script src="{{url_for('static', filename='js/reseñas.js', external=True)}}"></script>
         </form>
 
     </div>

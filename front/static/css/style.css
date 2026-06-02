@@ -151,7 +151,7 @@ section {
 }
 
 /* Botones Medievales */
-.btn {
+.boton {
     display: inline-block;
     background: var(--bg-card);
     color: var(--primary-gold);
@@ -168,7 +168,7 @@ section {
     margin-top: 20px;
 }
 
-.btn:hover {
+.boton:hover {
     background: var(--primary-gold);
     color: var(--bg-darker);
     border-color: var(--primary-gold-hover);
@@ -381,7 +381,7 @@ footer p {
 }
 
 
-.filters-container {
+.filtros {
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
@@ -391,7 +391,7 @@ footer p {
   padding: 0 20px;
 }
 
-.filter-btn {
+.boton-filtrar {
   background: var(--bg-darker);
   color: var(--text-parchment);
   border: 2px solid var(--border-wood);
@@ -405,7 +405,7 @@ footer p {
   box-shadow: 0 4px 6px rgba(0,0,0,0.3);
 }
 
-.filter-btn:hover {
+.boton-filtrar:hover {
   background: var(--bg-card);
   color: var(--primary-gold);
   border-color: var(--primary-gold);
@@ -413,7 +413,7 @@ footer p {
   transform: translateY(-2px);
 }
 
-.filter-btn.active {
+.boton-filtrar.activo {
   background: var(--primary-gold);
   color: var(--bg-darker);
   border-color: #ffdf7a;
@@ -432,3 +432,69 @@ footer p {
   padding: 20px;
 }
 
+@keyframes pulse-badge {
+  0% { transform: scale(1); box-shadow: 0 2px 8px rgba(0,0,0,0.5); }
+  100% { transform: scale(1.05); box-shadow: 0 2px 12px rgba(212, 160, 23, 0.6); }
+}
+
+.seccion_menu {
+  padding: 20px 8% 80px 8%;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+
+.estrella {
+  font-size: 2rem;
+  color: black;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+}
+
+.estrella:hover {
+  border: 2px solid var(--primary-gold);
+  text-shadow: 0 0 8px rgba(212, 160, 23, 0.6);
+}
+
+.estrella.activa {
+  color: var(--primary-gold);
+}
+
+#contenedor-menu {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+  margin-top: 20px;
+}
+.carta-de-platos {
+  background: var(--bg-card);
+  border: 2px solid var(--border-wood);
+  border-radius: 8px;
+  padding: 15px;
+  width: 280px;
+  box-shadow: var(--shadow-medieval);
+  transition: var(--transition-smooth);
+}
+
+.carta-de-platos:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-gold);
+}
+
+.carta-de-platos h2 {
+  margin-bottom: 10px;
+}
+
+.carta-de-platos p {
+  margin: 0;
+  color: var(--text-dim);
+  font-size: 0.95rem;
+}
+
+.comida-escondida{
+  display: none;
+}

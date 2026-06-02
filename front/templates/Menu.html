@@ -11,16 +11,16 @@ Menu - La Taberna del Dragón
         <p>Elige tu festín. Servimos los platos más sabrosos de los siete reinos.</p>
     </header>
 
-    <div class="filters-container">
-        <button class="filter-btn active" data-filter="all">Todos los Banquetes</button>
-        <button class="filter-btn" data-filter="plato-principal">Plato Principal</button>
-        <button class="filter-btn" data-filter="entrada">Entrada</button>
-        <button class="filter-btn" data-filter="bebida">Bebida</button>
-        <button class="filter-btn" data-filter="postre">Postre</button>
+    <div class="filtros">
+        <button class="boton-filtrar activo" data-filter="all">Todos los Banquetes</button>
+        <button class="boton-filtrar" data-filter="plato-principal">Plato Principal</button>
+        <button class="boton-filtrar" data-filter="entrada">Entrada</button>
+        <button class="boton-filtrar" data-filter="bebida">Bebida</button>
+        <button class="boton-filtrar" data-filter="postre">Postre</button>
     </div>
     <div id="contenedor-menu">
     {% for plato in platos %}
-    <div class="carta-de-platos">
+    <div class="carta-de-platos" comida-categoria="{{ plato.categoria}}">
         <h2>{{ plato.nombre_plato }}</h2>
         <p>{{ plato.descripcion }}</p>
         <p>{{ plato.precio }}</p>

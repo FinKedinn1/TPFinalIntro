@@ -5,7 +5,7 @@ API_BACKEND = "http://127.0.0.1:5000"
 app = Flask(__name__)
 
 
-@app.route("/")
+@app.route("/", methods=["GET", "POST"])
 def index():
     return render_template("index.html")
 
@@ -15,16 +15,27 @@ def menu():
     platos = responce.json()
     return render_template("Menu.html", platos=platos)
 
-@app.route("/registro")
+@app.route("/registro", methods=["GET", "POST"])
 def registro():
+    if request.method == "POST":
+        email = request.form["email"]
+        nombre_usuario = request.form["nombre_usuario"]
+        contraseña = request.form["contraseña"]
+        return redirect(url_for('login'))
     return render_template("registro.html")
 
-@app.route("/login")
+@app.route("/login", methods=["GET", "POST"])
 def login():
+    if request.method == "POST":
+        email = request.form["email"]
+        contraseña = request.form["contraseña"]
     return render_template("login.html")
 
-@app.route("/reservaciones")
+@app.route("/reservaciones", methods=["GET", "POST"])
 def reservaciones():
+    if request.method == "POST":
+        fecha_reserva = request.form["fecha_reserva"]
+        
     return render_template("reservas.html")
 
 @app.route("/reseñas")

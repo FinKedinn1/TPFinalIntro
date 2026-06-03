@@ -29,6 +29,7 @@ def login():
     if request.method == "POST":
         email = request.form["email"]
         contraseña = request.form["contraseña"]
+        return redirect(url_for('inicio'))
     return render_template("login.html")
 
 @app.route("/reservaciones", methods=["GET", "POST"])
@@ -38,8 +39,11 @@ def reservaciones():
         
     return render_template("reservas.html")
 
-@app.route("/reseñas")
+@app.route("/reseñas", methods=["GET", "POST"])
 def reseñas():
+    if request.method == "POST":
+        comentario = request.form["comentario"]
+        return redirect(url_for('reseñas'))
     return render_template("reseñas.html")
 
 if __name__ == "__main__":

@@ -25,7 +25,7 @@ document.getElementById("form-reseña").addEventListener("submit", async functio
         puntaje_estrellas: puntaje
     };
 
-    const res = await fetch("http://127.0.0.1:5000/reseñas", {
+    const res = await fetch("http://127.0.0.1:5001/reseñas", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -43,7 +43,7 @@ document.getElementById("form-reseña").addEventListener("submit", async functio
 
 
 async function cargarReseñas() {
-    const res = await fetch("http://127.0.0.1:5000/reseñas");
+    const res = await fetch("http://127.0.0.1:5001/reseñas");
     const data = await res.json();
 
     const contenedor = document.getElementById("contenedor-reseñas");

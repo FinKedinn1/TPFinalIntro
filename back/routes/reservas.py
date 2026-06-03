@@ -68,7 +68,7 @@ def ver_disponibilidad():
     try:
         #Consulto la capacidad en cada turno
         consulta = """
-        SELECT turno, SUM(cant_personas)
+        SELECT turno, SUM(cant_personas) AS total
         FROM reservas
         WHERE fecha_reserva = %s
         AND estado = 'activa'
@@ -135,15 +135,16 @@ def crear_reserva():
         WHERE fecha_reserva = %s
         AND turno = %s
         AND estado = 'activa'
+        
         """
 
         cursor.execute(check, (fecha_reserva, turno))
-        resultado = cursor.fetchone()[0]
-
+        resultado = cursor.fetchone()
+        ocupado = resultado["total"] or 0
         capacidad_max = 60
 
-        if (resultado or 0) + cant_personas > capacidad_max:
-            return jsonify ({
+        if ocupado + cant_personas > capacidad_max:
+            return jsonify({
                 "Mensaje": "No hay disponibilidad para esta fecha"
             }), 400
 

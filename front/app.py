@@ -36,7 +36,21 @@ def login():
 def reservaciones():
     if request.method == "POST":
         fecha_reserva = request.form["fecha_reserva"]
-        
+        turno = request.form["turno"]
+        cant_personas = int(request.form["cant_personas"])
+
+        datos = {
+            "id_usuario": 1,
+            "fecha_reserva": fecha_reserva,
+            "turno": turno,
+            "cant_personas": cant_personas
+        }
+
+        respuesta = requests.post(f"{API_BACKEND}/reservas",json=datos)
+
+        if respuesta.status_code == 201:
+            return redirect(url_for("reservaciones"))
+
     return render_template("reservas.html")
 
 @app.route("/reseñas", methods=["GET", "POST"])

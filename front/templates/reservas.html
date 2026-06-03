@@ -14,8 +14,19 @@
         <form method="POST" class="medieval-form" action="/">
             
             <div class="form-group">
-                <label for="fecha_reserva">Fecha y Hora: </label>
-                <input type="datetime-local" id="fecha_reserva" name="fecha_reserva" required>
+                <label for="turno">Turno:</label>
+            <select id="turno" name="turno" required>
+                <option value="20-22">20:00 - 22:00</option>
+                <option value="22-00">22:00 - 00:00</option>
+            </select>
+            </div>
+            <div class="form-group">
+                <label for="cant_personas">Cantidad de personas:</label>
+                <input type="number"
+                    id="cant_personas"
+                    name="cant_personas"
+                    min="1"
+                    required>
             </div>
             <button type="submit">
                 Reservar mesa

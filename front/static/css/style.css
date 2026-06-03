@@ -498,3 +498,30 @@ footer p {
 .comida-escondida{
   display: none;
 }
+
+/* Archivo error 404 */
+
+.error-page {
+    text-align: center;
+    padding: 60px 30px;
+}
+
+.error-page_code {
+    font-size: 120px;
+    font-weight: bold;
+    color: #d4a017;
+}
+
+.error-page_message {
+    font-size: 23px;
+    margin: 20px 0;
+}
+
+.error-page .boton {
+    margin-top: 20px;
+}
+
+.error-page_title {
+    font-size: 25px;
+    margin: 20px 0;
+}

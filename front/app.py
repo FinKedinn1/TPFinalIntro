@@ -98,6 +98,10 @@ def reseñas():
 
     return render_template("reseñas.html", reseñas=reseñas)
 
+@app.errorhandler(404)
+def pagina_no_encontrada(error):
+    return render_template("404.html"), 404
+
 
 if __name__ == "__main__":
     app.run("127.0.0.1", port=5001, debug=True)

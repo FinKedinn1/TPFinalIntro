@@ -1,8 +1,10 @@
-from flask import Flask, render_template, redirect, url_for, request
+
+from flask import Flask, render_template, redirect, url_for, request, session
 import requests
 
 API_BACKEND = "http://127.0.0.1:5000"
 app = Flask(__name__)
+app.secret_key = "clave_secreta"
 
 
 @app.route("/", methods=["GET", "POST"])
@@ -31,9 +33,23 @@ def registro():
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
-        email = request.form["email"]
-        contraseña = request.form["contraseña"]
-        return redirect(url_for('inicio'))
+
+        datos = {
+            "email": request.form["email"],
+            "password": request.form["password"]
+        }
+
+        respuesta = requests.post(f"{API_BACKEND}/login", json=datos)
+
+        if respuesta.status_code == 200:
+            usuario = respuesta.json()["usuario"]
+
+            session["usuario"] = usuario  
+
+            return redirect(url_for("index"))
+
+        return redirect(url_for("login"))
+
     return render_template("login.html")
 
 @app.route("/reservaciones", methods=["GET", "POST"])

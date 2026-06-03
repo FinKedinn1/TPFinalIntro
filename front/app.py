@@ -55,10 +55,29 @@ def reservaciones():
 
 @app.route("/reseñas", methods=["GET", "POST"])
 def reseñas():
+
     if request.method == "POST":
+
         comentario = request.form["comentario"]
-        return redirect(url_for('reseñas'))
-    return render_template("reseñas.html")
+
+        puntaje_estrellas = request.form.get("puntaje_estrellas", 0)
+
+        data = {
+            "id_reserva": 1,  # obtener de la reserva del usuario
+            "id_plato": 1,    # obtener del plato seleccionado
+            "comentario": comentario,
+            "puntaje_estrellas": puntaje_estrellas
+        }
+
+        requests.post(f"{API_BACKEND}/reseñas", json=data)
+
+        return redirect(url_for("reseñas"))
+
+    response = requests.get(f"{API_BACKEND}/reseñas")
+    reseñas = response.json()
+
+    return render_template("reseñas.html", reseñas=reseñas)
+
 
 if __name__ == "__main__":
     app.run("127.0.0.1", port=5001, debug=True)

@@ -14,13 +14,28 @@
     <div class="parchment-card">
 
         <h2>Dejá tu reseña</h2>
-    <span class = "estrella" data-rating='1'>★</span>
-    <span class = "estrella" data-rating='2'>★</span>
-    <span class = "estrella" data-rating='3'>★</span>
-    <span class = "estrella" data-rating='4'>★</span>
-    <span class = "estrella" data-rating='5'>★</span>
 
-        <form method="POST" id="form-reseña" class="medieval-form" action="/">
+        <span class="estrella" data-rating="1">★</span>
+        <span class="estrella" data-rating="2">★</span>
+        <span class="estrella" data-rating="3">★</span>
+        <span class="estrella" data-rating="4">★</span>
+        <span class="estrella" data-rating="5">★</span>
+
+        <form method="POST" class="medieval-form" action="/reseñas">
+
+            <input type="hidden" name="puntaje_estrellas" id="puntaje_estrellas">
+
+            <div class="form-group">
+                <label for="nombre">Nombre</label>
+
+                <input 
+                    type="text"
+                    id="nombre"
+                    name="nombre"
+                    placeholder="Ingresá tu nombre"
+                    required
+                >
+            </div>
 
             <div class="form-group">
                 <label for="comentario">Comentario</label>
@@ -36,13 +51,26 @@
             <button type="submit">
                 Enviar reseña
             </button>
-        <script src="{{url_for('static', filename='js/reseñas.js', external=True)}}"></script>
+
         </form>
 
-        <div id="contenedor-reseñas"></div>
+    </div>
+
+    <div id="contenedor-reseñas">
+
+        {% for reseña in reseñas %}
+
+        <div class="parchment-card">
+            <p><strong>Comentario:</strong> {{ reseña.comentario }}</p>
+            <p><strong>⭐</strong> {{ reseña.puntaje_estrellas }}</p>
+        </div>
+
+        {% endfor %}
 
     </div>
 
 </section>
+
+<script src="{{ url_for('static', filename='js/reseñas.js') }}"></script>
 
 {% endblock %}

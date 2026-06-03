@@ -111,33 +111,6 @@ def eliminar_usuario(id_usuario):
         "mensaje": "Usuario eliminado"
     })
 
-@registro_usuarios_bp.route('/register', methods=['POST'])
-def register():
-
-    data = request.get_json()
-
-    nombre = data['nombre']
-    email = data['email']
-    password = data['password']
-
-    connection = get_db_connection()
-    cursor = connection.cursor()
-
-    query = """
-    INSERT INTO usuarios (nombre, email, password)
-    VALUES (%s, %s, %s)
-    """
-
-    cursor.execute(query, (nombre, email, password))
-    connection.commit()
-
-    cursor.close()
-    connection.close()
-
-    return jsonify({
-        "mensaje": "Usuario registrado correctamente"
-    }), 201
-
 @registro_usuarios_bp.route('/login', methods=['POST'])
 def login():
 

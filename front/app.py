@@ -18,10 +18,14 @@ def menu():
 @app.route("/registro", methods=["GET", "POST"])
 def registro():
     if request.method == "POST":
-        email = request.form["email"]
-        nombre_usuario = request.form["nombre_usuario"]
-        contraseña = request.form["contraseña"]
-        return redirect(url_for('login'))
+       datos = {
+            "nombre": request.form["nombre"],
+            "email": request.form["email"],
+            "password": request.form["password"]
+        }
+       respuesta = requests.post(f"{API_BACKEND}/usuarios",json=datos)
+       if respuesta.status_code == 201:
+            return redirect(url_for("login"))
     return render_template("registro.html")
 
 @app.route("/login", methods=["GET", "POST"])

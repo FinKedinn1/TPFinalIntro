@@ -41,6 +41,38 @@
                 Reservar mesa
             </button>
         </form>
+    </div> 
+</section>
+// muestro las reservas activas 
+<section>
+<h2 class="titulo">
+Reservas Activas
+</h2>
+<div id="contenedor-reservas">
+
+{% for reserva in reservas %}
+
+<div class="parchment-card" style="margin-bottom:25px;">
+    <h3>
+         {{ reserva.nombre }}
+    </h3>
+    <p>
+         Fecha:
+        {{ reserva.fecha_reserva }}
+    </p>
+    <p>
+         Turno:
+        {{ reserva.turno }}
+    </p>
+    <p>
+         Cantidad de personas:
+        {{ reserva.cant_personas }}
+    </p>
+</div>
+
+{% endfor %}
+
+</div>
 </section>
 
 {% endblock %}

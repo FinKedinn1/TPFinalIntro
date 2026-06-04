@@ -2,6 +2,48 @@ from flask import Blueprint, jsonify, request
 from db import get_db_connection
 import qrcode
 
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from email.mime.image import MIMEImage
+
+def enviar_email(destinatario, datos_qr, path_qr, link_cancelacion):
+    remitente = "mail"
+    password = "contraseña"
+
+    mensaje = MIMEMultipart("related")  #indica que manda un mail con varias partes relacionadas
+    #headers del mail
+    mensaje["Subject"] = "Reserva confirmada"
+    mensaje["From"] = remitente
+    mensaje["To"] = destinatario
+
+    html = f"""
+    <h2>Reserva confirmada</h2>
+
+    <p>{datos_qr}</p>
+
+    <p>Mostrá este QR:</p>
+    <img src="cid:qr">  
+
+    <br><br>
+
+    <a href="{link_cancelacion}">
+        Cancelar reserva
+    </a>
+    """
+
+    mensaje.attach(MIMEText(html, "html"))  #coloca el texto en el mail
+
+    with open(path_qr, "rb") as f:  #abre la imagen en modo binario
+        img = MIMEImage(f.read())  #la convierte en formato adjuntable
+        img.add_header("Content-ID", "<qr>")  #qr es el ID de la imagen lo conecta con img src="cid:qr"
+        mensaje.attach(img)  #agrega la imagen
+
+    with smtplib.SMTP("smtp.gmail.com", 587) as server:  #conecta al servidor
+        server.starttls()  #conexion segura
+        server.login(remitente, password)
+        server.send_message(mensaje)
+
 reservas_bp = Blueprint('reservas', __name__)
 
 @reservas_bp.route('/reservas', methods=['GET'])
@@ -167,9 +209,29 @@ def crear_reserva():
             Personas: {cant_personas}
         """
 
-        img = qrcode.make(datos_qr)  #Agarra el texto y lo convierte en un codigo qr(imagen)
+        img_qr = qrcode.make(datos_qr)  #Agarra el texto y lo convierte en un codigo qr(imagen)
 
-        img.save(f"qr_reserva_{id_reserva}.png")  #Lo guarda como archivo imagen
+        path_qr = f"qr_reserva_{id_reserva}.png"  
+        img_qr.save(path_qr) #Lo guarda como archivo imagen
+
+        query_email = """
+        SELECT email FROM usuarios WHERE id_usuario = %s
+        """
+
+        cursor.execute(query_email, (id_usuario,))
+        usuario = cursor.fetchone()
+
+        if not usuario: 
+            return jsonify({"Mensaje": "Usuario no encontrado"}), 404
+
+        usuario_email = usuario["email"]
+        link_cancelacion = f"http://localhost:5000/reservas/cancelar/{id_reserva}"
+        
+        try: 
+            enviar_email(usuario_email, datos_qr, path_qr, link_cancelacion) 
+            print("MAIL ENVIADO") 
+        except Exception as e: 
+            print("ERROR MAIL:", e)
 
         return jsonify({
             "Mensaje": "Reserva creada exitosamente",
@@ -253,7 +315,7 @@ def actualizar_reserva(id):
         cursor.close()
         conn.close()
 
-@reservas_bp.route('/reservas/cancelar/<int:id>', methods=['PUT'])
+@reservas_bp.route('/reservas/cancelar/<int:id>', methods=['GET'])
 def cancelar_reserva(id):
 
     conn = get_db_connection()

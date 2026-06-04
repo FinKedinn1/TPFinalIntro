@@ -498,3 +498,17 @@ footer p {
 .comida-escondida{
   display: none;
 }
+
+.admin-dashboard {
+    max-width: 1000px;
+    margin: 50px auto;
+    padding: 30px;
+}
+
+.admin-dashboard a {
+    color: #eedcb3;
+}
+
+.admin-header {
+    text-align: center;
+}

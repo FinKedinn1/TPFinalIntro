@@ -83,5 +83,32 @@ def reseñas():
     return render_template("reseñas.html", reseñas=reseñas)
 
 
+@app.route("/admin")
+def admin():
+    return render_template("admin/dashboard.html")
+
+@app.route("/admin/login", methods=["GET", "POST"])
+def admin_login():
+    return render_template('admin/login.html')
+
+@app.route("/admin/registro", methods=["GET", "POST"])
+def admin_registro():
+    return render_template('admin/registro.html')
+
+@app.route("/admin/menu")
+def admin_menu():
+    return render_template("admin/menu.html")
+
+
+@app.route("/admin/reservas")
+def admin_reservas():
+    return render_template("admin/reservas.html")
+
+
+@app.route("/admin/reseñas")
+def admin_reseñas():
+    return render_template("admin/reseñas.html")
+
+
 if __name__ == "__main__":
     app.run("127.0.0.1", port=5001, debug=True)

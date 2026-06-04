@@ -102,6 +102,11 @@ def reseñas():
 def pagina_no_encontrada(error):
     return render_template("404.html"), 404
 
+@app.route("/logout")
+def logout():
+    session.pop("usuario", None)
+    return redirect(url_for("index"))
+
 
 if __name__ == "__main__":
     app.run("127.0.0.1", port=5001, debug=True)

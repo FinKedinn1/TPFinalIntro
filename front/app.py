@@ -46,7 +46,7 @@ def login():
 
             session["usuario"] = usuario  
 
-            return redirect(url_for("index"))
+            return render_template("login_hecho.html", usuario=usuario)
 
         return redirect(url_for("login"))
 

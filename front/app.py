@@ -46,7 +46,7 @@ def login():
 
             session["usuario"] = usuario  
 
-            return redirect(url_for("index"))
+            return render_template("login_hecho.html", usuario=usuario)
 
         return redirect(url_for("login"))
 
@@ -120,6 +120,11 @@ def reseñas():
 @app.errorhandler(404)
 def pagina_no_encontrada(error):
     return render_template("404.html"), 404
+
+@app.route("/logout")
+def logout():
+    session.pop("usuario", None)
+    return redirect(url_for("index"))
 
 
 if __name__ == "__main__":

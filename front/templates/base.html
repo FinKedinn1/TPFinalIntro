@@ -13,7 +13,11 @@
     <li><a href="{{ url_for('index') }}">inicio</a></li>
     <li><a href="{{ url_for('menu') }}">menu</a></li>
     <li><a href="{{ url_for('registro') }}">registro</a></li>
-    <li><a href="{{ url_for('login') }}">iniciar sesion</a></li>
+    {% if session.get('usuario') %}
+    <li><a href="{{ url_for('logout') }}">Cerrar sesión</a></li>
+    {% else %}
+    <li><a href="{{ url_for('login') }}">Iniciar sesión</a></li>
+    {% endif %}
     <li><a href="{{ url_for('reservaciones') }}">reservaciones</a></li>
     <li><a href="{{ url_for('reseñas') }}">reseñas</a></li>
 
@@ -26,6 +30,7 @@
 
   <footer>
     <p>La taberna del dragon</p>
+    <p>{{ session.get('usuario') }}</p>
     <section id="contacto">
     <h2 class="titulo">Visítanos</h2>
 

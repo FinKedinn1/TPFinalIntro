@@ -71,8 +71,11 @@ def reservaciones():
         if respuesta.status_code == 201:
             return redirect(url_for("reservaciones"))
 
-    return render_template("reservas.html")
-
+    response = requests.get(f"{API_BACKEND}/reservas")
+    reservas = response.json()
+    
+    return render_template("reservas.html", reservas=reservas)
+    
 @app.route("/reseñas", methods=["GET", "POST"])
 def reseñas():
 

@@ -96,27 +96,6 @@ paths:
         '200':
           description: Usuario eliminado
 
-  /register:
-    post:
-      summary: Registrar usuario
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                nombre:
-                  type: string
-                email:
-                  type: string
-                password:
-                  type: string
-
-      responses:
-        '201':
-          description: Usuario registrado correctamente
-
   /login:
     post:
       summary: Iniciar sesión

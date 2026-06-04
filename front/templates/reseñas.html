@@ -21,21 +21,15 @@
         <span class="estrella" data-rating="4">★</span>
         <span class="estrella" data-rating="5">★</span>
 
+        {% if error %}
+            <script>
+                alert("{{ error }}");
+            </script>
+        {% endif %}
+
         <form method="POST" class="medieval-form" action="/reseñas">
 
             <input type="hidden" name="puntaje_estrellas" id="puntaje_estrellas">
-
-            <div class="form-group">
-                <label for="nombre">Nombre</label>
-
-                <input 
-                    type="text"
-                    id="nombre"
-                    name="nombre"
-                    placeholder="Ingresá tu nombre"
-                    required
-                >
-            </div>
 
             <div class="form-group">
                 <label for="comentario">Comentario</label>

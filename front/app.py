@@ -20,14 +20,14 @@ def menu():
 @app.route("/registro", methods=["GET", "POST"])
 def registro():
     if request.method == "POST":
-       datos = {
-            "nombre": request.form["nombre"],
-            "email": request.form["email"],
-            "password": request.form["password"]
-        }
-       respuesta = requests.post(f"{API_BACKEND}/usuarios",json=datos)
-       if respuesta.status_code == 201:
-            return redirect(url_for("login"))
+        datos = {
+                "nombre": request.form["nombre"],
+                "email": request.form["email"],
+                "password": request.form["password"]
+            }
+        respuesta = requests.post(f"{API_BACKEND}/usuarios",json=datos)
+        if respuesta.status_code == 201:
+                return redirect(url_for("login"))
     return render_template("registro.html")
 
 @app.route("/login", methods=["GET", "POST"])
@@ -73,31 +73,47 @@ def reservaciones():
 
     response = requests.get(f"{API_BACKEND}/reservas")
     reservas = response.json()
-    
+
     return render_template("reservas.html", reservas=reservas)
-    
+
 @app.route("/reseñas", methods=["GET", "POST"])
 def reseñas():
+
+    response = requests.get(f"{API_BACKEND}/reseñas")
+    reseñas = response.json()
+
+    if "usuario" not in session:
+        return render_template(
+            "reseñas.html",
+            reseñas=reseñas,
+            error="Debes iniciar sesión para dejar una reseña."
+        )
 
     if request.method == "POST":
 
         comentario = request.form["comentario"]
-
         puntaje_estrellas = request.form.get("puntaje_estrellas", 0)
 
         data = {
-            "id_reserva": 1,  # obtener de la reserva del usuario
-            "id_plato": 1,    # obtener del plato seleccionado
+            "id_reserva": 1,
+            "id_plato": 1,
             "comentario": comentario,
-            "puntaje_estrellas": puntaje_estrellas
+            "puntaje_estrellas": int(puntaje_estrellas)
         }
 
-        requests.post(f"{API_BACKEND}/reseñas", json=data)
+        respuesta = requests.post(f"{API_BACKEND}/reseñas", json=data)
+
+        if respuesta.status_code != 201:
+            response = requests.get(f"{API_BACKEND}/reseñas")
+            reseñas = response.json()
+
+            return render_template(
+                "reseñas.html",
+                reseñas=reseñas,
+                error="No se pudo crear la reseña."
+            )
 
         return redirect(url_for("reseñas"))
-
-    response = requests.get(f"{API_BACKEND}/reseñas")
-    reseñas = response.json()
 
     return render_template("reseñas.html", reseñas=reseñas)
 

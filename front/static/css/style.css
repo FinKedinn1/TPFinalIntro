@@ -32,7 +32,7 @@ nav {
     background: rgba(10, 7, 4, 0.95);
     border-bottom: 2px solid var(--border-wood);
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
     padding: 15px 5%;
     box-sizing: border-box;

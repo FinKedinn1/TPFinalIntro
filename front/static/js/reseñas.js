@@ -15,15 +15,3 @@ for (let i = 0; i < estrellas.length; i++) {
     });
 }
 
-const formulario = document.querySelector("form");
-
-formulario.addEventListener("submit", function(event) {
-
-    const puntaje = document.getElementById("puntaje_estrellas").value;
-
-    if (!puntaje) {
-        event.preventDefault();
-        alert("Debe seleccionar una cantidad de estrellas");
-    }
-
-});

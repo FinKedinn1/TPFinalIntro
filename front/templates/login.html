@@ -9,6 +9,8 @@
     <p>Ingresá a tu cuenta de la taberna medieval.</p>
 </header>
 
+
+
 <section class="reviews-section">
 
     <div class="parchment-card">
@@ -41,6 +43,12 @@
                     required
                 >
             </div>
+
+            {% if error %}
+            <div class="error-message">
+                <p>{{ error }}</p>
+            </div>
+            {% endif %}
 
             <button type="submit">
                 Iniciar sesión

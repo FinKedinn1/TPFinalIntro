@@ -48,7 +48,10 @@ def login():
 
             return render_template("login_hecho.html", usuario=usuario)
 
-        return redirect(url_for("login"))
+        return render_template(
+            "login.html",
+            error="Email o contraseña incorrectos. Si no tienes cuenta, debes registrarte."
+        )
 
     return render_template("login.html")
 
@@ -84,7 +87,7 @@ def reseñas():
 
     if "usuario" not in session:
         return render_template(
-            "reseñas.html",
+            "login.html",
             reseñas=reseñas,
             error="Debes iniciar sesión para dejar una reseña."
         )
@@ -92,7 +95,14 @@ def reseñas():
     if request.method == "POST":
 
         comentario = request.form["comentario"]
-        puntaje_estrellas = request.form.get("puntaje_estrellas", 0)
+        puntaje_estrellas = request.form.get("puntaje_estrellas")
+
+        if not puntaje_estrellas:
+            return render_template(
+                "reseñas.html",
+                reseñas=reseñas,
+                error="Debes seleccionar una cantidad de estrellas."
+            )
 
         data = {
             "id_reserva": 1,
@@ -104,13 +114,10 @@ def reseñas():
         respuesta = requests.post(f"{API_BACKEND}/reseñas", json=data)
 
         if respuesta.status_code != 201:
-            response = requests.get(f"{API_BACKEND}/reseñas")
-            reseñas = response.json()
-
             return render_template(
-                "reseñas.html",
+                "reservas.html",
                 reseñas=reseñas,
-                error="No se pudo crear la reseña."
+                error="Debes reservar para poder dejar una reseña."
             )
 
         return redirect(url_for("reseñas"))

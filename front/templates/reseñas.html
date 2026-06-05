@@ -21,10 +21,11 @@
         <span class="estrella" data-rating="4">★</span>
         <span class="estrella" data-rating="5">★</span>
 
+
         {% if error %}
-            <script>
-                alert("{{ error }}");
-            </script>
+        <div class="error-message">
+            <p>{{ error }}</p>
+        </div>
         {% endif %}
 
         <form method="POST" class="medieval-form" action="/reseñas">

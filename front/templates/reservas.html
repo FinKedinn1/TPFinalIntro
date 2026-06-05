@@ -9,6 +9,12 @@
     <p>Asegura tu lugar en la taberna medieval.</p>
 </header>
 
+{% if error %}
+<div class="error-message">
+    <p>{{ error }}</p>
+</div>
+{% endif %}
+
 <section class="reviews-header">
     <div class="search-card">
         <form method="POST" class="medieval-form" action="/reservaciones">

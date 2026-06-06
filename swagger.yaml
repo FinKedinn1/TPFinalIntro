@@ -121,29 +121,70 @@ paths:
 
   /reservas:
     get:
-      summary: Obtener reservas
+      summary: Obtener todas las reservas activas
+      description: Lista completa de reservas activas 
+
       responses:
         '200':
-          description: Lista de reservas
+          description: Lista de reservas activas
+        '500': 
+          description: Error interno del servidor
 
     post:
-      summary: Crear reserva
+      summary: Crear nueva reserva
       requestBody:
         required: true
         content:
           application/json:
             schema:
               type: object
+              required:
+                - id_usuario
+                - fecha_reserva
+                - cant_personas
+                - turno
               properties:
-                usuario:
-                  type: string
+                id_usuario:
+                  type: integer 
                 fecha_reserva:
                   type: string
-                  format: date-time
+                  format: date
+                cant_personas: 
+                  type: integer
+                turno: 
+                  type: string
+                  enum:
+                    - "20-22"
+                    - "22-00"
+    
+      responses: 
+       '201':
+         description: Reserva creada correctamente
+       '400':
+         description: Turno no disponible o datos inválidos
+       '404':
+         description: Usuario no encontrado
+       '500':
+         description: Error interno del servidor
+  
+  /reservas/disponibilidad:
+    get: 
+      summary: Verificar disponibilidad de reservas por fecha
+      parameters:
+        - name: fecha
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
 
       responses:
-        '201':
-          description: Reserva creada
+        '200':
+          description: Disponibilidad obtenida correctamente
+        '400':
+          description: Se requiere ingresar una fecha válida
+        '500':
+          description: Error interno del servidor
 
   /reservas/{id}:
     get:
@@ -158,6 +199,8 @@ paths:
       responses:
         '200':
           description: Reserva encontrada
+        '404':
+          description: Reserva no encontrada
 
     put:
       summary: Actualizar reserva
@@ -174,20 +217,37 @@ paths:
           application/json:
             schema:
               type: object
+              required:
+                - id_usuario
+                - fecha_reserva
+                - cant_personas
+                - turno
               properties:
-                usuario:
-                  type: string
+                id_usuario:
+                  type: integer
                 fecha_reserva:
                   type: string
-                  format: date-time
-
+                  format: date
+                cant_personas:
+                  type: integer
+                turno:
+                  type: string
+                  enum:
+                    - "20-22"
+                    - "22-00"
+      
       responses:
         '200':
-          description: Reserva actualizada
-
-    delete:
-      summary: Eliminar reserva
-      parameters:
+          description: Reserva actualizada correctamente
+        '400':
+          description: Turno no disponible o datos inválidos
+        '500':
+          description: Error interno del servidor
+  
+  /reservas/cancelar/{id}:
+    get:
+      summary: Cancelar reserva
+      parameters: 
         - name: id
           in: path
           required: true
@@ -196,14 +256,22 @@ paths:
 
       responses:
         '200':
-          description: Reserva eliminada
+          description: Reserva cancelada correctamente
+        '400':
+          description: La reserva ya fue cancelada
+        '404':
+          description: Reserva no encontrada
+        '500':
+          description: Error interno del servidor
 
   /reseñas:
     get:
-      summary: Obtener reseñas
+      summary: Obtener todas las reseñas
       responses:
         '200':
           description: Lista de reseñas
+        '500':
+          description: Error interno del servidor
 
     post:
       summary: Crear reseña
@@ -213,17 +281,32 @@ paths:
           application/json:
             schema:
               type: object
+              required:
+                - id_reserva 
+                - comentario 
+                - puntaje_estrellas 
+                - id_plato
               properties:
                 id_reserva:
                   type: integer
                 comentario:
                   type: string
-                puntaje:
+                puntaje_estrellas:
+                  type: integer
+                  minimum: 1
+                  maximum: 5
+                id_plato: 
                   type: integer
 
       responses:
         '201':
-          description: Reseña creada
+          description: Reseña creada correctamente
+        '400':
+          description: Datos inválidos
+        '404':
+          description: Reserva no encontrada
+        '500':
+          description: Error interno del servidor
 
   /reseñas/{id}:
     delete:
@@ -237,4 +320,6 @@ paths:
 
       responses:
         '200':
-          description: Reseña eliminada
+          description: Reseña eliminada correctamente
+        '500':
+          description: Error interno del servidor

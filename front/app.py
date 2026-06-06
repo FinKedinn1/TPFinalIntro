@@ -69,7 +69,7 @@ def reservaciones():
         cant_personas = int(request.form["cant_personas"])
 
         datos = {
-            "id_usuario": 1,
+            "id_usuario": session["usuario"]["id_usuario"],
             "fecha_reserva": fecha_reserva,
             "turno": turno,
             "cant_personas": cant_personas
@@ -91,14 +91,14 @@ def reseñas():
     response = requests.get(f"{API_BACKEND}/reseñas")
     reseñas = response.json()
 
-    if "usuario" not in session:
-        return render_template(
-            "login.html",
-            reseñas=reseñas,
-            error="Debes iniciar sesión para dejar una reseña."
-        )
-
     if request.method == "POST":
+
+        if "usuario" not in session:
+            return render_template(
+                "reseñas.html",
+                reseñas=reseñas,
+                error="Debes iniciar sesión para dejar una reseña."
+            )
 
         comentario = request.form["comentario"]
         puntaje_estrellas = request.form.get("puntaje_estrellas")
@@ -121,7 +121,7 @@ def reseñas():
 
         if respuesta.status_code != 201:
             return render_template(
-                "reservas.html",
+                "reseñas.html",
                 reseñas=reseñas,
                 error="Debes reservar para poder dejar una reseña."
             )

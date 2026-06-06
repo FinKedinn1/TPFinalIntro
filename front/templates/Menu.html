@@ -17,10 +17,14 @@ Menu - La Taberna del Dragón
         <button class="boton-filtrar" data-filter="Entradas">Entrada</button>
         <button class="boton-filtrar" data-filter="Bebidas">Bebida</button>
         <button class="boton-filtrar" data-filter="Postres">Postre</button>
+        <button class="boton-filtrar" data-filter="Populares">Platos Populares</button>
     </div>
     <div id="contenedor-menu">
     {% for plato in platos %}
-    <div class="carta-de-platos" comida-categoria="{{ plato.categoria}}">
+    <div class="carta-de-platos" comida-categoria="{{ plato.categoria }}" comida-popular="{% if plato.id_plato in ids_platos_populares %}True{% else %}False{% endif %}">
+        {% if plato.id_plato in ids_platos_populares %}
+        <span class="etiqueta-popular">¡Popular!</span>
+        {% endif %}
         <h2>{{ plato.nombre_plato }}</h2>
         <p>{{ plato.descripcion }}</p>
         <p>{{ plato.precio }}</p>

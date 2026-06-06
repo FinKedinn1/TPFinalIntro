@@ -61,7 +61,7 @@ VALUES
 'Cheesecake de frutos rojos',
 4500,
 'Postres'
-);
+),
 (
 'Pollo del Caballero',
 'Pechuga grillada con hierbas y vegetales',

@@ -2,6 +2,8 @@
 from flask import Flask, render_template, redirect, url_for, request, session
 import requests
 
+
+
 API_BACKEND = "http://127.0.0.1:5000"
 app = Flask(__name__)
 app.secret_key = "clave_secreta"
@@ -15,7 +17,11 @@ def index():
 def menu():
     responce = requests.get(f'{API_BACKEND}/carta')
     platos = responce.json()
-    return render_template("Menu.html", platos=platos)
+    response_populares = requests.get(f'{API_BACKEND}/menu/populares')
+    platos_populares = response_populares.json()
+    
+    ids_platos_populares = [plato["id_plato"] for plato in platos_populares]
+    return render_template("Menu.html", platos=platos, ids_platos_populares=ids_platos_populares)
 
 @app.route("/registro", methods=["GET", "POST"])
 def registro():

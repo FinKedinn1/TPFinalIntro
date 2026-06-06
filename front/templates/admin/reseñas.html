@@ -2,15 +2,25 @@
 {% block title %}administraciob reseñas{% endblock %}
 
 {% block content %}
-<header class="reviews-header">
-    <h1>administracion de reseñas</h1>
-    <p>gestion de las reseñas de los usuarios</p>
+<header class="reseñas-header">
+<h1>administracion de reseñas</h1>
+<p>gestion de las reseñas de los usuarios</p>
 </header>
 
-<section class="reviews-section">
-    <div class="parchment-card">
-        <h2>Reseñas recibidas</h2>
-<!--aca van las reseñas, pero todavia no tenemos datos de eso-->
+<section class="reseñas-section">
+<div class="parchment-card">
+<h2>reseña aceptada</h2>
+{% for reseña in reseñas %}
+<div>
+<p>Puntaje: {{ reseña.puntaje_estrellas }} estrellas</p>
+<p>{{ reseña.comentario }}</p>
+<button>eliminar</button>
+<hr>
+</div>
+{% else %}
+<p>no hay reseñas</p>
+{% endfor %}
+
     </div>
 </section>
 {% endblock %}

@@ -6,6 +6,7 @@ from routes.registro_usuarios import registro_usuarios_bp
 from routes.reservas import reservas_bp
 from routes.reseñas import reseñas_bp
 from routes.platos_populares import platos_populares_bp
+from routes.admin import admin_bp
 
 app = Flask(__name__)
 
@@ -16,6 +17,7 @@ app.register_blueprint(registro_usuarios_bp)
 app.register_blueprint(reservas_bp)
 app.register_blueprint(reseñas_bp)
 app.register_blueprint(platos_populares_bp)
+app.register_blueprint(admin_bp)
 
 if __name__ == '__main__':
     app.run(debug=True)

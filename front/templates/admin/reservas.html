@@ -8,21 +8,34 @@
 </header>
 
 <section class="reviews-section">
-    <div class="search-card">
-        <h2>reservas registradas</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>cliente</th>
-                    <th>fecha y hora</th>
-                    <th>acciones</th>
-                </tr>
-            </thead>
+<div class="search-card">
+<h2>reservas registradas</h2>
+<table>
+<thead>
+<tr>
+<th>cliente</th>
+<th>fecha y hora</th>
+<th>acciones</th>
+</tr>
+</thead>
 
-            <tbody>
-<!--de nuevo, aca van datos-->
-            </tbody>
-        </table>
-    </div>
+<tbody>
+{% for reserva in reservas %}
+<tr>
+<td>{{ reserva.nombre }}</td>
+<td>{{ reserva.fecha_reserva }} - {{ reserva.turno }}</td>
+<td><button>eliminar</button></td>
+</tr>
+{% else %}
+<tr>
+<td>no hay reservas.</td>
+<td></td>
+<td></td>
+</tr>
+{% endfor %}
+</tbody>
+
+</table>
+</div>
 </section>
 {% endblock %}

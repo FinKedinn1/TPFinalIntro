@@ -89,26 +89,63 @@ def admin():
 
 @app.route("/admin/login", methods=["GET", "POST"])
 def admin_login():
+    if request.method == "POST":
+        datos_admin = {
+            "email": request.form["email"],
+            "password": request.form["password"]
+        }
+        respuesta = requests.post(f"{API_BACKEND}/login", json=datos_admin)        
+        if respuesta.status_code == 200:
+            return redirect(url_for("admin"))
     return render_template('admin/login.html')
+
 
 @app.route("/admin/registro", methods=["GET", "POST"])
 def admin_registro():
-    return render_template('admin/registro.html')
+    if request.method == "POST":
+        datos_registro = {
+            "nombre": request.form.get("nombre"),
+            "email": request.form.get("email"),
+            "password": request.form.get("password")
+        }
+        respuesta = requests.post(f"{API_BACKEND}/usuarios", json=datos_registro)
+        if respuesta.status_code == 201:
+            return redirect(url_for("admin_login"))
+    return render_template("admin/registro.html")
 
-@app.route("/admin/menu")
+
+@app.route("/admin/menu", methods=["GET", "POST"])
 def admin_menu():
-    return render_template("admin/menu.html")
+    if request.method == "POST":
+        datos_plato = {
+            "nombre": request.form.get("nombre"),
+            "precio": request.form.get("precio")
+        }
 
+        respuesta = requests.post(f"{API_BACKEND}/admin/menu", json=datos_plato)
+        
+        if respuesta.status_code == 201:
+            return redirect(url_for("admin_menu"))
+
+        return "Error al agregar plato", 500
+
+    respuesta = requests.get(f"{API_BACKEND}/carta")
+    lista_platos = respuesta.json()
+    return render_template("admin/menu.html", platos=lista_platos)
 
 @app.route("/admin/reservas")
 def admin_reservas():
-    return render_template("admin/reservas.html")
+    respuesta = requests.get(f"{API_BACKEND}/reservas")
+    lista_reservas = respuesta.json()
+    return render_template("admin/reservas.html", reservas=lista_reservas)
 
 
 @app.route("/admin/reseñas")
 def admin_reseñas():
-    return render_template("admin/reseñas.html")
+    respuesta = requests.get(f"{API_BACKEND}/reseñas")
 
+    lista_reseñas = respuesta.json()
+    return render_template("admin/reseñas.html", reseñas=lista_reseñas)
 
 if __name__ == "__main__":
     app.run("127.0.0.1", port=5001, debug=True)

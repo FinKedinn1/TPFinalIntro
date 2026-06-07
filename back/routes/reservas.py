@@ -358,3 +358,25 @@ def cancelar_reserva(id):
     finally:
         cursor.close()
         conn.close()
+
+        
+@reservas_bp.route('/reservas/usuario/<int:id_usuario>', methods=['GET'])
+def reservas_usuario(id_usuario):
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    query = """
+    SELECT *
+    FROM reservas
+    WHERE id_usuario = %s
+    AND estado = 'activa'
+    """
+
+    cursor.execute(query, (id_usuario,))
+    reservas = cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+
+    return jsonify(reservas)

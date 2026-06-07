@@ -15,12 +15,6 @@
 
         <h2>Dejá tu reseña</h2>
 
-        <span class="estrella" data-rating="1">★</span>
-        <span class="estrella" data-rating="2">★</span>
-        <span class="estrella" data-rating="3">★</span>
-        <span class="estrella" data-rating="4">★</span>
-        <span class="estrella" data-rating="5">★</span>
-
 
         {% if error %}
         <div class="error-message">
@@ -29,8 +23,50 @@
         {% endif %}
 
         <form method="POST" class="medieval-form" action="/reseñas">
+            
+            <div class="form-group">
+                <label for="id_reserva">Reserva</label>
 
-            <input type="hidden" name="puntaje_estrellas" id="puntaje_estrellas">
+                <select name="id_reserva" id="id_reserva" required>
+                    <option value="">Seleccioná una reserva</option>
+
+                    {% for reserva in reservas_usuario %}
+                    <option value="{{ reserva.id_reserva }}">
+                        Reserva #{{ reserva.id_reserva }}
+                        - {{ reserva.fecha_reserva }}
+                        - Turno {{ reserva.turno }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="id_plato">Plato</label>
+
+                <select name="id_plato" id="id_plato" required>
+                    <option value="">Seleccioná un plato</option>
+
+                    {% for plato in platos %}
+                    <option value="{{ plato.id_plato }}">
+                        {{ plato.nombre_plato }}
+                    </option>
+                    {% endfor %}
+
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label>Puntaje</label>
+
+                <div class="rating-container">
+                    <span class="estrella" data-rating="1">★</span>
+                    <span class="estrella" data-rating="2">★</span>
+                    <span class="estrella" data-rating="3">★</span>
+                    <span class="estrella" data-rating="4">★</span>
+                    <span class="estrella" data-rating="5">★</span>
+                </div>
+                <input type="hidden" name="puntaje_estrellas" id="puntaje_estrellas">
+            </div>   
 
             <div class="form-group">
                 <label for="comentario">Comentario</label>
@@ -58,6 +94,9 @@
         <div class="parchment-card">
             <p><strong>Comentario:</strong> {{ reseña.comentario }}</p>
             <p><strong>⭐</strong> {{ reseña.puntaje_estrellas }}</p>
+            {% if reseña.nombre_plato %}
+            <p><strong>Plato:</strong> {{ reseña.nombre_plato }}</p>
+            {% endif %}
         </div>
 
         {% endfor %}

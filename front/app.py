@@ -91,28 +91,48 @@ def reseñas():
     response = requests.get(f"{API_BACKEND}/reseñas")
     reseñas = response.json()
 
+    response_platos = requests.get(f"{API_BACKEND}/carta")
+    platos = response_platos.json()
+
+    reservas_usuario = []
+
+    if "usuario" in session:
+        id_usuario = session["usuario"]["id_usuario"]
+
+        response_reservas = requests.get(
+            f"{API_BACKEND}/reservas/usuario/{id_usuario}"
+        )
+
+        reservas_usuario = response_reservas.json()
+
     if request.method == "POST":
 
         if "usuario" not in session:
             return render_template(
                 "reseñas.html",
                 reseñas=reseñas,
+                platos=platos,
                 error="Debes iniciar sesión para dejar una reseña."
             )
 
         comentario = request.form["comentario"]
         puntaje_estrellas = request.form.get("puntaje_estrellas")
+        id_plato = request.form.get("id_plato")
+        id_reserva = request.form.get("id_reserva")
 
         if not puntaje_estrellas:
             return render_template(
                 "reseñas.html",
                 reseñas=reseñas,
+                platos=platos,
+                reservas_usuario=reservas_usuario,
                 error="Debes seleccionar una cantidad de estrellas."
             )
 
+
         data = {
-            "id_reserva": 1,
-            "id_plato": 1,
+            "id_reserva": int(id_reserva),
+            "id_plato": int(id_plato),
             "comentario": comentario,
             "puntaje_estrellas": int(puntaje_estrellas)
         }
@@ -123,12 +143,14 @@ def reseñas():
             return render_template(
                 "reseñas.html",
                 reseñas=reseñas,
+                platos=platos,
+                reservas_usuario=reservas_usuario,
                 error="Debes reservar para poder dejar una reseña."
             )
 
         return redirect(url_for("reseñas"))
 
-    return render_template("reseñas.html", reseñas=reseñas)
+    return render_template("reseñas.html", reseñas=reseñas, platos=platos, reservas_usuario=reservas_usuario)
 
 @app.errorhandler(404)
 def pagina_no_encontrada(error):

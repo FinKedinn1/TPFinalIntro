@@ -9,9 +9,9 @@
     <p>Asegura tu lugar en la taberna medieval.</p>
 </header>
 
-{% if error %}
-<div class="error-message">
-    <p>{{ error }}</p>
+{% if exito %}
+<div class="exito-message">
+    <p>{{ exito }}</p>
 </div>
 {% endif %}
 
@@ -43,6 +43,14 @@
                     min="1"
                     required>
             </div>
+
+
+            {% if error %}
+            <div class="error-message">
+                <p>{{ error }}</p>
+            </div>
+            {% endif %}
+
             <button type="submit">
                 Reservar mesa
             </button>

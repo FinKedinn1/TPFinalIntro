@@ -576,3 +576,15 @@ footer p {
     text-align: center;
     font-weight: bold;
 }
+
+.exito-message {
+    background: rgba(120, 20, 20, 0.9);
+    border: 2px solid #d4af37;
+    color: #f5e6c8;
+    padding: 8px;
+    border-radius: 10px;
+    margin: 5px auto;
+    max-width: 1000px;
+    text-align: center;
+    font-weight: bold;
+}

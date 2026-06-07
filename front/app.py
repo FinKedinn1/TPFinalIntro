@@ -74,6 +74,18 @@ def login():
 @app.route("/reservaciones", methods=["GET", "POST"])
 def reservaciones():
     if request.method == "POST":
+
+        if "usuario" not in session:
+            response = requests.get(f"{API_BACKEND}/reservas")
+            reservas = response.json()
+
+            return render_template(
+                "reservas.html",
+                reservas=reservas,
+                error="Debes iniciar sesión para reservar"
+            )
+
+
         fecha_reserva = request.form["fecha_reserva"]
         turno = request.form["turno"]
         cant_personas = int(request.form["cant_personas"])
@@ -88,7 +100,27 @@ def reservaciones():
         respuesta = requests.post(f"{API_BACKEND}/reservas",json=datos)
 
         if respuesta.status_code == 201:
-            return redirect(url_for("reservaciones"))
+            response = requests.get(f"{API_BACKEND}/reservas")
+            reservas = response.json()
+            return render_template(
+                "reservas.html",
+                reservas=reservas,
+                exito="Reserva realizada con éxito"
+        )
+        
+        data = respuesta.json()
+
+        response = requests.get(f"{API_BACKEND}/reservas")
+        reservas = response.json()
+
+        return render_template(
+            "reservas.html",
+            reservas=reservas,
+            error=data.get("error"),
+            fecha_reserva=fecha_reserva,
+            turno=turno,
+            cant_personas=cant_personas
+        )
 
     response = requests.get(f"{API_BACKEND}/reservas")
     reservas = response.json()

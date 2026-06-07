@@ -66,7 +66,7 @@ def mostrar_reservas():
     cursor.close()
     conn.close()
 
-    return jsonify(reservas)
+    return jsonify(reservas), 200
 
 
 @reservas_bp.route('/reservas/<int:id>', methods=['GET'])
@@ -90,10 +90,10 @@ def mostrar_reserva_id(id):
     conn.close()
 
     if reserva:
-        return jsonify(reserva)
+        return jsonify(reserva), 200
 
     return jsonify({
-        "Mensaje": "Reserva no encontrada"
+        "error": "Reserva no encontrada"
     }), 404
 
 @reservas_bp.route('/reservas/disponibilidad', methods=['GET'])
@@ -102,7 +102,7 @@ def ver_disponibilidad():
     fecha = request.args.get("fecha")
 
     if not fecha:
-        return jsonify({"Mensaje": "Se necesita la fecha"}), 400
+        return jsonify({"error": "Se necesita la fecha"}), 400
     
     conn = get_db_connection()
     cursor = conn.cursor()
@@ -139,7 +139,7 @@ def ver_disponibilidad():
 
     except Exception as e:
         return jsonify({
-            "Mensaje": "Error al buscar la disponibilidad",
+            "error": "Error al buscar la disponibilidad",
             "detalle": str(e)
         }), 500
     
@@ -160,11 +160,11 @@ def crear_reserva():
 
     if not id_usuario or not fecha_reserva or not cant_personas or not turno:
         return jsonify({
-            "Mensaje": "Faltan datos para crear la reserva"
+            "error": "Faltan datos para crear la reserva"
         }), 400
     
     if turno not in ["20-22", "22-00"]:
-        return jsonify ({"Mensaje": "Turno invalido"}), 400
+        return jsonify ({"error": "Turno invalido"}), 400
 
     conn = get_db_connection()
     cursor = conn.cursor()
@@ -187,7 +187,7 @@ def crear_reserva():
 
         if ocupado + cant_personas > capacidad_max:
             return jsonify({
-                "Mensaje": "No hay disponibilidad para esta fecha"
+                "error": "No hay disponibilidad para esta fecha"
             }), 400
 
         query = """
@@ -222,7 +222,7 @@ def crear_reserva():
         usuario = cursor.fetchone()
 
         if not usuario: 
-            return jsonify({"Mensaje": "Usuario no encontrado"}), 404
+            return jsonify({"error": "Usuario no encontrado"}), 404
 
         usuario_email = usuario["email"]
         link_cancelacion = f"http://localhost:5000/reservas/cancelar/{id_reserva}"
@@ -234,14 +234,14 @@ def crear_reserva():
             print("ERROR MAIL:", e)
 
         return jsonify({
-            "Mensaje": "Reserva creada exitosamente",
+            "mensaje": "Reserva creada exitosamente",
             "id_reserva": id_reserva
         }), 201
     
     except Exception as e:
         conn.rollback()
         return jsonify({
-            "Mensaje": "Error con la reserva",
+            "error": "Error con la reserva",
             "detalle": str(e)
         }), 500
     
@@ -262,7 +262,7 @@ def actualizar_reserva(id):
 
     if not id_usuario or not fecha_reserva or not cant_personas or not turno:
         return jsonify({
-            "Mensaje": "Faltan datos para actualizar la reserva"
+            "error": "Faltan datos para actualizar la reserva"
         }), 400
 
     conn = get_db_connection()
@@ -287,7 +287,7 @@ def actualizar_reserva(id):
 
         if ocupado + cant_personas > capacidad_max:
             return jsonify ({
-                "Mensaje": "No hay disponibilidad para esta fecha"
+                "error": "No hay disponibilidad para esta fecha"
             }), 400
 
         query = """
@@ -301,13 +301,13 @@ def actualizar_reserva(id):
         conn.commit()
 
         return jsonify({
-            "Mensaje": "Reserva actualizada exitosamente"
+            "mensaje": "Reserva actualizada exitosamente"
         }), 200
     
     except Exception as e:
         conn.rollback()
         return jsonify({
-            "Mensaje": "Error con la reserva",
+            "error": "Error con la reserva",
             "detalle": str(e)
         }), 500
 
@@ -331,10 +331,10 @@ def cancelar_reserva(id):
         reserva = cursor.fetchone()
 
         if not reserva:
-            return jsonify({"Mensaje": "Reserva no encontrada"}), 404
+            return jsonify({"error": "Reserva no encontrada"}), 404
         
         if reserva["estado"] == "cancelada":
-            return jsonify({"Mensaje": "La reserva ya está cancelada"}), 400
+            return jsonify({"mensaje": "La reserva ya está cancelada"}), 400
         
         query = """
         UPDATE reservas SET estado = 'cancelada'
@@ -345,13 +345,13 @@ def cancelar_reserva(id):
         conn.commit()
 
         return jsonify({
-            "Mensaje": "Reserva cancelada exitosamente"
+            "mensaje": "Reserva cancelada exitosamente"
         }), 200
 
     except Exception as e:
         conn.rollback()
         return jsonify({
-            "Mensaje": "Error al cancelar la reserva",
+            "error": "Error al cancelar la reserva",
             "detalle": str(e)
         }), 500
 
@@ -379,4 +379,4 @@ def reservas_usuario(id_usuario):
     cursor.close()
     conn.close()
 
-    return jsonify(reservas)
+    return jsonify(reservas), 200

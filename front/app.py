@@ -32,8 +32,18 @@ def registro():
                 "password": request.form["password"]
             }
         respuesta = requests.post(f"{API_BACKEND}/usuarios",json=datos)
+        
         if respuesta.status_code == 201:
                 return redirect(url_for("login"))
+        
+        data = respuesta.json()
+
+        return render_template(
+            "registro.html",
+            error = data.get("error"),
+            nombre=datos["nombre"],
+            email=datos["email"]
+        )
     return render_template("registro.html")
 
 @app.route("/login", methods=["GET", "POST"])

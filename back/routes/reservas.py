@@ -2,14 +2,19 @@ from flask import Blueprint, jsonify, request
 from db import get_db_connection
 import qrcode
 
+import os
+from dotenv import load_dotenv
+
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.mime.image import MIMEImage
 
+load_dotenv()
+
 def enviar_email(destinatario, datos_qr, path_qr, link_cancelacion):
-    remitente = "mail"
-    password = "contraseña"
+    remitente = os.getenv("EMAIL_RESERVAS")
+    password = os.getenv("EMAIL_RESERVAS_CONTRASENIA")
 
     mensaje = MIMEMultipart("related")  #indica que manda un mail con varias partes relacionadas
     #headers del mail

@@ -10,6 +10,8 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.mime.image import MIMEImage
 
+load_dotenv()
+
 def enviar_email(destinatario, datos_qr, path_qr, link_cancelacion):
     remitente = os.getenv("EMAIL_RESERVAS")
     password = os.getenv("EMAIL_RESERVAS_CONTRASENIA")

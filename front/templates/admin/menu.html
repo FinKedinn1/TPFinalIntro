@@ -30,6 +30,9 @@ administracion del menu
 <div class="item-plato">
 <p>{{ plato.nombre_plato }} - ${{ plato.precio }}</p>
 </div>
+<form action="{{ url_for('admin_menu_borrar', id_plato=plato.id_plato) }}" method="POST" style="display:inline;">
+<button type="submit" onclick="return confirm('confirmar borrar plato');">Borrar</button>
+</form>
 {% else %}
 <p>el menú está vacío.</p>
 {% endfor %}

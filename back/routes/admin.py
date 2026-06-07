@@ -35,3 +35,14 @@ def admin_menu():
     connection.close()
 
     return jsonify({"mensaje": "plato agregado correctamente"}), 201
+
+@admin_bp.route("/admin/menu/<int:id_plato>", methods=["DELETE"])
+def api_admin_menu_borrar(id_plato):
+    connection = get_db_connection()
+    cursor = connection.cursor()
+    cursor.execute("DELETE FROM carta WHERE id_plato = %s", (id_plato,))
+    connection.commit()
+    cursor.close()
+    connection.close()
+    
+    return jsonify({"mensaje": "Plato borrado exitosamente"}), 200

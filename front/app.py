@@ -204,5 +204,10 @@ def admin_reseñas():
     lista_reseñas = respuesta.json()
     return render_template("admin/reseñas.html", reseñas=lista_reseñas)
 
+@app.route("/admin/menu/borrar/<int:id_plato>", methods=["POST"])
+def admin_menu_borrar(id_plato):
+    requests.delete(f"{API_BACKEND}/admin/menu/{id_plato}")
+    return redirect(url_for("admin_menu"))
+
 if __name__ == "__main__":
     app.run("127.0.0.1", port=5001, debug=True)

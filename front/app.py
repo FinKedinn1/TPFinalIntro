@@ -57,18 +57,25 @@ def login():
         respuesta = requests.post(f"{API_BACKEND}/login", json=datos)
 
         if respuesta.status_code == 200:
-            usuario = respuesta.json()["usuario"]
-
+            data = respuesta.json()
+            usuario = data["usuario"]
             session["usuario"] = usuario  
-
             return render_template("login_hecho.html", usuario=usuario)
+
+        try:
+            data = respuesta.json()
+            error = data.get("error")
+        except Exception:
+            error = "Error inesperado en el servidor"
 
         return render_template(
             "login.html",
-            error="Email o contraseña incorrectos. Si no tienes cuenta, debes registrarte."
+            error=error
         )
 
     return render_template("login.html")
+
+
 
 @app.route("/reservaciones", methods=["GET", "POST"])
 def reservaciones():
@@ -144,7 +151,10 @@ def reseñas():
             f"{API_BACKEND}/reservas/usuario/{id_usuario}"
         )
 
-        reservas_usuario = response_reservas.json()
+        try:
+            reservas_usuario = response_reservas.json()
+        except:
+            reservas_usuario = []
 
     if request.method == "POST":
 
@@ -153,6 +163,7 @@ def reseñas():
                 "reseñas.html",
                 reseñas=reseñas,
                 platos=platos,
+                reservas_usuario=reservas_usuario,
                 error="Debes iniciar sesión para dejar una reseña."
             )
 
@@ -170,7 +181,6 @@ def reseñas():
                 error="Debes seleccionar una cantidad de estrellas."
             )
 
-
         data = {
             "id_reserva": int(id_reserva),
             "id_plato": int(id_plato),
@@ -181,17 +191,28 @@ def reseñas():
         respuesta = requests.post(f"{API_BACKEND}/reseñas", json=data)
 
         if respuesta.status_code != 201:
+            try:
+                data = respuesta.json()
+                error = data.get("error") or data.get("Error")
+            except:
+                error = "No se pudo crear la reseña"
+
             return render_template(
                 "reseñas.html",
                 reseñas=reseñas,
                 platos=platos,
                 reservas_usuario=reservas_usuario,
-                error="Debes reservar para poder dejar una reseña."
+                error=error  
             )
 
         return redirect(url_for("reseñas"))
 
-    return render_template("reseñas.html", reseñas=reseñas, platos=platos, reservas_usuario=reservas_usuario)
+    return render_template(
+        "reseñas.html",
+        reseñas=reseñas,
+        platos=platos,
+        reservas_usuario=reservas_usuario
+    )
 
 @app.errorhandler(404)
 def pagina_no_encontrada(error):

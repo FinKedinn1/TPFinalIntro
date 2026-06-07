@@ -38,15 +38,7 @@ def crear_reseña():
 
     for campo in obligatorio:
         if campo not in data:
-            return jsonify({"Error": f"Falta {campo}"}), 400
-
-    if puntaje < 1 or puntaje > 5:
-        return {"Error": "Puntaje invàlido"}, 400
-    
-    id_reserva = data.get("id_reserva")
-    comentario = data.get("comentario")
-    puntaje = int(data.get("puntaje_estrellas"))
-    id_plato = data.get("id_plato")
+            return jsonify({"error": f"Falta {campo}"}), 400
 
     if puntaje < 1 or puntaje > 5:
         return jsonify({
@@ -63,7 +55,7 @@ def crear_reseña():
         if not reserva:
             cursor.close()
             connection.close()
-            return {"Error": "La reserva no existe"}, 404
+            return jsonify({"error": "La reserva no existe"}), 404
 
         sql = "INSERT INTO reseñas (id_reserva, comentario, puntaje_estrellas, id_plato) VALUES (%s, %s, %s, %s)"
 
@@ -94,13 +86,13 @@ def crear_reseña():
 
         connection.commit()
         
-        return jsonify({"Mensaje": "Reseña creada con exito"}), 201
+        return jsonify({"mensaje": "Reseña creada con exito"}), 201
     except Exception as e:
 
         connection.rollback()
 
         return jsonify({
-            "Error": "No se pudo crear la reseña",
+            "error": "No se pudo crear la reseña",
             "detalle": str(e)
         }), 500
 
@@ -122,4 +114,4 @@ def eliminar_reseña_id(id):
     cursor.close()
     connection.close()
 
-    return {"Mensaje": "Reseña eliminada con exito"}, 200
+    return jsonify({"mensaje": "Reseña eliminada con exito"}), 200

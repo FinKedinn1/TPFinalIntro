@@ -136,10 +136,10 @@ def login():
 
     if usuario:
         return jsonify({
-            "mensaje": "Login exitoso",
-            "usuario": usuario
-        })
+            "error": "Email o contraseña incorrectos, debes registrarte para iniciar sesion"
+        }), 401
 
+    
     return jsonify({
         "mensaje": "Email o contraseña incorrectos"
     }), 401

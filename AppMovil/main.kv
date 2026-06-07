@@ -1,0 +1,225 @@
+ScreenManager:
+    InicioScreen:
+        name: 'inicio'
+    LoginScreen:
+        name: 'login'
+    RegistroScreen:
+        name: 'registro'
+    PrincipalScreen:
+        name: 'principal'
+    CartaScreen:
+        name: 'carta'
+        id: carta_screen
+
+<InicioScreen>:
+    BoxLayout:
+        orientation: 'vertical'
+        padding: [30, 50, 30, 50]
+        spacing: 20
+
+        Label:
+            text: '¡Bienvenidos al Restó!'
+            font_size: '32sp'
+            bold: True
+            size_hint_y: None
+            height: 80
+
+        Label:
+            text: '¿Qué deseas hacer hoy?'
+            font_size: '18sp'
+            color: [0.7, 0.7, 0.7, 1]
+            size_hint_y: None
+            height: 40
+
+        Widget:
+
+        Button:
+            text: 'Ver Menú / Carta'
+            size_hint_y: None
+            height: 55
+            background_color: [0.2, 0.6, 1, 1]
+            on_press: root.ir_a_carta_publica()
+
+        Button:
+            text: 'Iniciar Sesión'
+            size_hint_y: None
+            height: 50
+            on_press: root.manager.current = 'login'
+
+        Button:
+            text: 'Crear una Cuenta'
+            size_hint_y: None
+            height: 50
+            on_press: root.manager.current = 'registro'
+
+<CartaScreen>:
+    BoxLayout:
+        orientation: 'vertical'
+        padding: [15, 20, 15, 20]
+        spacing: 10
+
+        BoxLayout:
+            size_hint_y: None
+            height: 50
+            orientation: 'horizontal'
+            
+            Label:
+                text: 'Nuestro Menú'
+                font_size: '24sp'
+                bold: True
+                halign: 'left'
+            
+            Button:
+                text: 'Volver'
+                size_hint_x: None
+                width: 80
+                on_press: root.manager.current = 'inicio'
+
+        ScrollView:
+            do_scroll_x: False
+            do_scroll_y: True
+            
+            BoxLayout:
+                id: lista_platos
+                orientation: 'vertical'
+                size_hint_y: None
+                height: self.minimum_height
+                spacing: 10
+
+<LoginScreen>:
+    BoxLayout:
+        orientation: 'vertical'
+        padding: [30, 40, 30, 40]
+        spacing: 15
+
+        Label:
+            text: 'Iniciar Sesión'
+            font_size: '26sp'
+            bold: True
+            size_hint_y: None
+            height: 50
+
+        TextInput:
+            id: email_input
+            hint_text: 'Correo Electrónico'
+            multiline: False
+            size_hint_y: None
+            height: 44
+
+        TextInput:
+            id: password_input
+            hint_text: 'Contraseña'
+            password: True
+            multiline: False
+            size_hint_y: None
+            height: 44
+
+        Button:
+            text: 'Ingresar'
+            size_hint_y: None
+            height: 50
+            on_press: root.procesar_login(email_input.text, password_input.text)
+
+        Button:
+            text: 'Volver al Inicio'
+            background_color: [0, 0, 0, 0]
+            color: [0.2, 0.6, 1, 1]
+            size_hint_y: None
+            height: 30
+            on_press: root.manager.current = 'inicio'
+
+        Label:
+            id: mensaje_estado
+            text: ''
+            color: [1, 0, 0, 1]
+            size_hint_y: None
+            height: 30
+
+<RegistroScreen>:
+    BoxLayout:
+        orientation: 'vertical'
+        padding: [30, 40, 30, 40]
+        spacing: 15
+
+        Label:
+            text: 'Crear Cuenta'
+            font_size: '26sp'
+            bold: True
+            size_hint_y: None
+            height: 50
+
+        TextInput:
+            id: nombre_input
+            hint_text: 'Nombre Completo'
+            multiline: False
+            size_hint_y: None
+            height: 44
+
+        TextInput:
+            id: email_registro
+            hint_text: 'Correo Electrónico'
+            multiline: False
+            size_hint_y: None
+            height: 44
+
+        TextInput:
+            id: password_registro
+            hint_text: 'Contraseña'
+            password: True
+            multiline: False
+            size_hint_y: None
+            height: 44
+
+        Button:
+            text: 'Registrarme'
+            size_hint_y: None
+            height: 50
+            on_press: root.procesar_registro(nombre_input.text, email_registro.text, password_registro.text)
+
+        Button:
+            text: 'Volver al Inicio'
+            background_color: [0, 0, 0, 0]
+            color: [0.2, 0.6, 1, 1]
+            size_hint_y: None
+            height: 30
+            on_press: root.manager.current = 'inicio'
+
+        Label:
+            id: mensaje_registro
+            text: ''
+            color: [1, 0, 0, 1]
+            size_hint_y: None
+            height: 30
+
+<PrincipalScreen>:
+    BoxLayout:
+        orientation: 'vertical'
+        padding: [20, 20, 20, 20]
+        spacing: 20
+
+        Label:
+            id: bienvenido_label
+            text: '¡Hola!'
+            font_size: '24sp'
+            bold: True
+            size_hint_y: None
+            height: 50
+
+        Label:
+            text: 'Panel de Usuario Autenticado'
+            font_size: '16sp'
+            size_hint_y: None
+            height: 30
+
+        Button:
+            text: 'Mis Reservas'
+            size_hint_y: None
+            height: 50
+            on_press: root.ir_a_reservas()
+
+        Button:
+            text: 'Cerrar Sesión'
+            background_color: [1, 0.3, 0.3, 1]
+            size_hint_y: None
+            height: 50
+            on_press: root.cerrar_sesion()

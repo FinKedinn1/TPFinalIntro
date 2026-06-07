@@ -53,7 +53,7 @@ class CartaScreen(Screen):
                 nombre = plato[1]
                 precio = plato[3] if len(plato) > 3 else ""
 
-            texto_plato = f"🍕 {nombre} - ${precio}" if precio else f"🍕 {nombre}"
+            texto_plato = f"{nombre} - ${precio}" if precio else f"{nombre}"
             
             lbl = Label(
                 text=texto_plato,
@@ -74,12 +74,12 @@ class LoginScreen(Screen):
             self.ids.mensaje_estado.text = "Completa todos los campos."
             return
 
-        payload = {'email': email, 'password': password}
+        paquete = {'email': email, 'password': password}
         headers = {'Content-Type': 'application/json'}
         
         UrlRequest(
             f"{BASE_URL}/login",
-            req_body=json.dumps(payload),
+            req_body=json.dumps(paquete),
             req_headers=headers,
             on_success=self.login_exitoso,
             on_failure=self.login_fallido,
@@ -112,12 +112,12 @@ class RegistroScreen(Screen):
             self.ids.mensaje_registro.text = "Completa todos los campos."
             return
 
-        payload = {'nombre': nombre, 'email': email, 'password': password}
+        paquete = {'nombre': nombre, 'email': email, 'password': password}
         headers = {'Content-Type': 'application/json'}
 
         UrlRequest(
             f"{BASE_URL}/usuarios",
-            req_body=json.dumps(payload),
+            req_body=json.dumps(paquete),
             req_headers=headers,
             on_success=self.registro_exitoso,
             on_failure=self.registro_fallido,
@@ -141,6 +141,64 @@ class RegistroScreen(Screen):
         self.ids.mensaje_registro.color = [1, 0, 0, 1]
         self.ids.mensaje_registro.text = "Error de conexión."
 
+class ReservasScreen(Screen):
+    def cargar_reservas(self):
+        if 'lista_reservas' in self.ids:
+            self.ids.lista_reservas.clear_widgets()
+        
+        UrlRequest(
+            f"{BASE_URL}/reservaciones?id_usuario=1",
+            on_success=self.reservas_cargadas_ok,
+            on_failure=self.error_carga,
+            on_error=self.error_carga
+        )
+        def reservas_ok(self, req, result):
+            if 'lista_reservas' not in self.ids:
+                return
+            if not result:
+                self.ids.lista_reservas.add_widget(Label(text="No tienes reservas activas.", size_hint_y=None, height=40))
+                return
+            for reserva in result:
+                fecha = reserva.get('fecha') if isinstance(reserva, dict) else reserva[2]
+                hora = reserva.get('hora') if isinstance(reserva, dict) else reserva[3]
+                cantidad = reserva.get('cantidad_personas') if isinstance(reserva, dict) else reserva[4]
+                estado = reserva.get('estado') if isinstance(reserva, dict) else reserva[5]
+                texto_reserva = f"{fecha} a las {hora} - {cantidad} personas - {estado}"
+                lbl = Label(
+                    text=texto_reserva, size_hint_y=None, height=45)
+                self.ids.lista_reservas.add_widget(lbl)
+        def error_carga(self, req, error):
+            if 'lista_reservas' in self.ids:
+                self.ids.lista_reservas.add_widget(Label(text="Error al cargar tus reservas. (ERROR BACKEND)", color=[1,0,0,1], size_hint_y=None, height=40))
+class ReviewsScreen(Screen):
+    def cargar_reviews(self):
+        if 'lista_reviews' in self.ids:
+            self.ids.lista_reviews.clear_widgets()
+        
+        UrlRequest(
+            f"{BASE_URL}/reviews?id_usuario=1",
+            on_success=self.reviews_cargadas_ok,
+            on_failure=self.error_carga,
+            on_error=self.error_carga
+        )
+        def reviews_ok(self, req, result):
+            if 'lista_reviews' not in self.ids:
+                return
+            if not result:
+                self.ids.lista_reviews.add_widget(Label(text="No has dejado reviews aún.", size_hint_y=None, height=40))
+                return
+            for review in result:
+                plato = review.get('plato') if isinstance(review, dict) else review[2]
+                comentario = review.get('comentario') if isinstance(review, dict) else review[3]
+                texto_review = f"{plato} - {comentario}"
+                lbl = Label(
+                    text=texto_review, size_hint_y=None, height=45)
+                self.ids.lista_reviews.add_widget(lbl)
+        def error_carga(self, req, error):
+            if 'lista_reviews' in self.ids:
+                self.ids.lista_reviews.add_widget(Label(text="Error al cargar tus reviews. (ERROR BACKEND)", color=[1,0,0,1], size_hint_y=None, height=40))
+
+
 
 class PrincipalScreen(Screen):
     def ir_a_reservas(self):
@@ -150,33 +208,22 @@ class PrincipalScreen(Screen):
         self.manager.current = 'inicio'
 
 
+
 class RestoApp(App):
     def build(self):
-        # 1. Buscamos la ruta absoluta inequívoca del archivo de diseño
+        
         directorio_actual = os.path.dirname(os.path.abspath(__file__))
         ruta_kv = os.path.join(directorio_actual, 'main.kv')
         
-        # 2. Forzamos la limpieza de caché y CARGAMOS el diseño en el motor de Kivy
+       
         try:
             Builder.unload_file(ruta_kv)
         except:
             pass
-        Builder.load_file(ruta_kv)
-        
-        # 3. Ahora que el motor conoce los diseños, creamos el administrador manual
-        sm = ScreenManager()
-        
-        # 4. Registramos las pantallas una por una de forma explícita
-        sm.add_widget(InicioScreen(name='inicio'))
-        sm.add_widget(LoginScreen(name='login'))
-        sm.add_widget(RegistroScreen(name='registro'))
-        sm.add_widget(PrincipalScreen(name='principal'))
-        sm.add_widget(CartaScreen(name='carta'))
-        
-        # 5. Definimos la pantalla de arranque
-        sm.current = 'inicio'
-        
-        return sm
+            
+      
+        return Builder.load_file(ruta_kv)
+
 
 if __name__ == '__main__':
     RestoApp().run()

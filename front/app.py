@@ -1,10 +1,9 @@
 
 from flask import Flask, render_template, redirect, url_for, request, session
 import requests
+import os
 
-
-
-API_BACKEND = "http://127.0.0.1:5000"
+API_BACKEND = os.environ.get("API_BACKEND", "http://127.0.0.1:5000")
 app = Flask(__name__)
 app.secret_key = "clave_secreta"
 
@@ -274,4 +273,4 @@ def admin_menu_borrar(id_plato):
     return redirect(url_for("admin_menu"))
 
 if __name__ == "__main__":
-    app.run("127.0.0.1", port=5001, debug=True)
+    app.run(host="0.0.0.0", port=5001, debug=True)

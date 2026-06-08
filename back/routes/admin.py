@@ -21,15 +21,16 @@ def admin_menu():
     datos = request.json
     nombre = datos.get("nombre")
     precio = datos.get("precio")
-
-    if not nombre or not precio:
+    categoria = datos.get("categoria")    
+    descripcion = datos.get("descripcion")   
+    if not nombre or not precio or not categoria or not descripcion:
         return jsonify({"mensaje": "faltan datos"}), 400
 
     connection = get_db_connection()
     cursor = connection.cursor()
-    query = "INSERT INTO carta (nombre_plato, precio) VALUES (%s, %s)"
+    query = "INSERT INTO carta (nombre_plato, precio, categoria, descripcion) VALUES (%s, %s, %s, %s)"
 
-    cursor.execute(query, (nombre, precio))
+    cursor.execute(query, (nombre, precio, categoria, descripcion))
     connection.commit()
     cursor.close()
     connection.close()

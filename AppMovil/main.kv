@@ -1,4 +1,4 @@
-ScreenManager:
+SScreenManager:
     InicioScreen:
         name: 'inicio'
     LoginScreen:
@@ -13,7 +13,27 @@ ScreenManager:
     ReservasScreen:
         name: 'reservas'
     ReviewScreen:
-        name: 'rankin'
+        name: 'reviews'
+
+<Label>:
+    font_name: 'MedievalSharp-Book'
+    
+
+<Button>:
+    font_name: 'MedievalSharp-Book'
+    background_color: [0.3, 0.2, 0.1, 1]
+
+<Screen>:
+    canvas.before:
+        Rectangle:
+            pos: self.pos
+            size: self.size
+            source: 'assets/images/bar_vacio.jpg'
+        Color:
+            rgba: [0, 0, 0, 0.6]
+        Rectangle:
+            pos: self.pos
+            size: self.size
 
 <InicioScreen>:
     BoxLayout:
@@ -23,15 +43,21 @@ ScreenManager:
 
         Label:
             text: '¡Bienvenidos al Restó!'
-            font_size: '32sp'
+            font_size: '36sp'
             bold: True
+            color: [0.8,0.6,0.1,1]
+            outline_width: 1
+            outline_color: [0, 0, 0, 1]
             size_hint_y: None
             height: 80
 
         Label:
             text: '¿Qué deseas hacer hoy?'
-            font_size: '18sp'
-            color: [0.7, 0.7, 0.7, 1]
+            bold: True
+            font_size: '20sp'
+            color: [0.8, 0.6, 0.1, 1]
+            outline_width: 1
+            outline_color: [0, 0, 0, 1]
             size_hint_y: None
             height: 40
 
@@ -41,7 +67,7 @@ ScreenManager:
             text: 'Ver Menú / Carta'
             size_hint_y: None
             height: 55
-            background_color: [0.2, 0.6, 1, 1]
+            background_color: [0.3, 0.2, 0.1, 1]
             on_press: root.ir_a_carta_publica()
 
         Button:
@@ -55,6 +81,7 @@ ScreenManager:
             size_hint_y: None
             height: 50
             on_press: root.manager.current = 'registro'
+            on_press: root.manager.current = 'registro'
 
 <CartaScreen>:
     BoxLayout:
@@ -66,12 +93,17 @@ ScreenManager:
             size_hint_y: None
             height: 50
             orientation: 'horizontal'
-            
+
             Label:
                 text: 'Nuestro Menú'
+                color: [0.8,0.6,0.1,1]
+                outline_width: 1
+                outline_color: [0, 0, 0, 1]
                 font_size: '24sp'
                 bold: True
-                halign: 'left'
+                halign: 'center'
+                valign: 'middle'
+                text_size: self.size
             
             Button:
                 text: 'Volver'
@@ -89,6 +121,19 @@ ScreenManager:
                 size_hint_y: None
                 height: self.minimum_height
                 spacing: 10
+
+                canvas.before:
+                    Color:
+                        rgba: [0.169, 0.122, 0.078, 1]
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [10]
+                    Color:
+                        rgba: [0.29, 0.2, 0.14, 1]
+                    Line:
+                        rounded_rectangle: (self.x + 5, self.y + 5, self.width - 10, self.height - 10, 10)
+                        width: 1.5
 
 <LoginScreen>:
     BoxLayout:
@@ -222,6 +267,20 @@ ScreenManager:
             on_press: root.ir_a_reservas()
 
         Button:
+            text: 'Mis Reviews'
+            size_hint_y: None
+            height: 50
+            on_press: root.ir_a_reviews()
+
+
+        Button:
+            text: 'Ver Menú / Carta'
+            size_hint_y: None
+            height: 55
+            background_color: [0.3, 0.2, 0.1, 1]
+            on_press: root.ir_a_carta_publica()
+        
+        Button:
             text: 'Cerrar Sesión'
             background_color: [1, 0.3, 0.3, 1]
             size_hint_y: None
@@ -239,6 +298,9 @@ ScreenManager:
             orientation: 'horizontal'
             Label:
                 text: 'Mis Reservaciones'
+                height: 45
+                color: [0.8,0.6,0.1,1]
+                outline_width: 1
                 font_size: '24sp'
                 bold: True
                 halign: 'left'
@@ -257,6 +319,20 @@ ScreenManager:
                 size_hint_y: None
                 height: self.minimum_height
                 spacing: 10
+
+                canvas.before:
+                    Color:
+                        rgba: [0.169, 0.122, 0.078, 1]
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [10]
+                    Color:
+                        rgba: [0.29, 0.2, 0.14, 1]
+                    Line:
+                        rounded_rectangle: (self.x + 5, self.y + 5, self.width - 10, self.height - 10, 10)
+                        width: 1.5
+                    
 <ReviewScreen>:
     BoxLayout:
         orientation: 'vertical'
@@ -269,6 +345,8 @@ ScreenManager:
             orientation: 'horizontal'
             Label:
                 text: 'Reseñas de Clientes'
+                color: [0.8,0.6,0.1,1]
+                outline_width: 1
                 font_size: '24sp'
                 bold: True
                 halign: 'left'
@@ -277,7 +355,7 @@ ScreenManager:
                 size_hint_x: None
                 width: 80
                 on_press: root.manager.current = 'inicio'
-            ScrollView:
+        ScrollView:
             do_scroll_x: False
             do_scroll_y: True
             BoxLayout:

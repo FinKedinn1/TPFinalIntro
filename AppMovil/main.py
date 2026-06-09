@@ -1,8 +1,10 @@
 from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.network.urlrequest import UrlRequest
+from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.label import Label
 from kivy.lang import Builder
+from kivy.core.text import LabelBase
 import json
 import os
 
@@ -17,6 +19,11 @@ def obtener_url_backend():
 
 BASE_URL = obtener_url_backend()
 
+
+LabelBase.register(
+    name="MedievalSharp-Book",
+    fn_regular='assets/fonts/MedievalSharp-Book.ttf'
+)
 
 class InicioScreen(Screen):
     def ir_a_carta_publica(self):
@@ -47,7 +54,7 @@ class CartaScreen(Screen):
 
         for plato in platos:
             if isinstance(plato, dict):
-                nombre = plato.get('nombre', 'Plato sin nombre')
+                nombre = plato.get('nombre_plato', 'Plato sin nombre')
                 precio = plato.get('precio', '')
             else:
                 nombre = plato[1]
@@ -58,6 +65,9 @@ class CartaScreen(Screen):
             lbl = Label(
                 text=texto_plato,
                 font_size='18sp',
+                color=[1,1,1,1],
+                outline_width=1,
+                outline_color=[0, 0, 0, 1],
                 size_hint_y=None,
                 height=40
             )
@@ -147,62 +157,95 @@ class ReservasScreen(Screen):
             self.ids.lista_reservas.clear_widgets()
         
         UrlRequest(
-            f"{BASE_URL}/reservaciones?id_usuario=1",
+            f"{BASE_URL}/reservas",
             on_success=self.reservas_cargadas_ok,
             on_failure=self.error_carga,
             on_error=self.error_carga
         )
-        def reservas_ok(self, req, result):
-            if 'lista_reservas' not in self.ids:
-                return
-            if not result:
-                self.ids.lista_reservas.add_widget(Label(text="No tienes reservas activas.", size_hint_y=None, height=40))
-                return
-            for reserva in result:
-                fecha = reserva.get('fecha') if isinstance(reserva, dict) else reserva[2]
-                hora = reserva.get('hora') if isinstance(reserva, dict) else reserva[3]
-                cantidad = reserva.get('cantidad_personas') if isinstance(reserva, dict) else reserva[4]
-                estado = reserva.get('estado') if isinstance(reserva, dict) else reserva[5]
-                texto_reserva = f"{fecha} a las {hora} - {cantidad} personas - {estado}"
-                lbl = Label(
-                    text=texto_reserva, size_hint_y=None, height=45)
-                self.ids.lista_reservas.add_widget(lbl)
-        def error_carga(self, req, error):
-            if 'lista_reservas' in self.ids:
-                self.ids.lista_reservas.add_widget(Label(text="Error al cargar tus reservas. (ERROR BACKEND)", color=[1,0,0,1], size_hint_y=None, height=40))
-class ReviewsScreen(Screen):
+    def reservas_cargadas_ok(self, req, result):
+        if 'lista_reservas' not in self.ids:
+            return
+        
+        if not result:
+            self.ids.lista_reservas.add_widget(Label(text="No tienes reservas activas.", size_hint_y=None, height=40))
+            return
+        
+        reservas = result
+
+        for reserva in reservas:
+            fecha = reserva.get('fecha_reserva') if isinstance(reserva, dict) else reserva[2]
+            hora = reserva.get('turno') if isinstance(reserva, dict) else reserva[3]
+            cantidad = reserva.get('cant_personas') if isinstance(reserva, dict) else reserva[4]
+            estado = reserva.get('estado') if isinstance(reserva, dict) else reserva[5]
+            texto_reserva = f"{fecha} a las {hora} - {cantidad} personas - {estado}"
+            lbl = Label(
+                text=texto_reserva, 
+                size_hint_y=None, 
+                height=45,
+                color=[1,1,1,1],
+                outline_width=1,
+                outline_color=[0, 0, 0, 1]
+                )
+            self.ids.lista_reservas.add_widget(lbl)
+
+    def error_carga(self, req, error):
+        if 'lista_reservas' in self.ids:
+            self.ids.lista_reservas.add_widget(Label(text="Error al cargar tus reservas. (ERROR BACKEND)", color=[1,0,0,1], size_hint_y=None, height=40))
+
+
+class ReviewScreen(Screen):
     def cargar_reviews(self):
         if 'lista_reviews' in self.ids:
             self.ids.lista_reviews.clear_widgets()
         
         UrlRequest(
-            f"{BASE_URL}/reviews?id_usuario=1",
+            f"{BASE_URL}/reseñas",
             on_success=self.reviews_cargadas_ok,
             on_failure=self.error_carga,
             on_error=self.error_carga
         )
-        def reviews_ok(self, req, result):
-            if 'lista_reviews' not in self.ids:
-                return
-            if not result:
-                self.ids.lista_reviews.add_widget(Label(text="No has dejado reviews aún.", size_hint_y=None, height=40))
-                return
-            for review in result:
-                plato = review.get('plato') if isinstance(review, dict) else review[2]
-                comentario = review.get('comentario') if isinstance(review, dict) else review[3]
-                texto_review = f"{plato} - {comentario}"
-                lbl = Label(
-                    text=texto_review, size_hint_y=None, height=45)
-                self.ids.lista_reviews.add_widget(lbl)
-        def error_carga(self, req, error):
-            if 'lista_reviews' in self.ids:
-                self.ids.lista_reviews.add_widget(Label(text="Error al cargar tus reviews. (ERROR BACKEND)", color=[1,0,0,1], size_hint_y=None, height=40))
+    def reviews_cargadas_ok(self, req, result):
+        if 'lista_reviews' not in self.ids:
+            return
+        
+        if not result:
+            self.ids.lista_reviews.add_widget(Label(text="No has dejado reviews aún.", size_hint_y=None, height=40))
+            return
+        
+        reviews = result
+
+        for review in reviews:
+            plato = review.get('id_plato') if isinstance(review, dict) else review[2]
+            comentario = review.get('comentario') if isinstance(review, dict) else review[3]
+            texto_review = f"{plato} - {comentario}"
+            lbl = Label(
+                text=texto_review, 
+                size_hint_y=None, 
+                height=45,
+                color=[0.8,0.6,0.1,1],
+                outline_width=1,
+                outline_color=[0, 0, 0, 1]
+                )
+            self.ids.lista_reviews.add_widget(lbl)
+            
+    def error_carga(self, req, error):
+        if 'lista_reviews' in self.ids:
+            self.ids.lista_reviews.add_widget(Label(text="Error al cargar tus reviews. (ERROR BACKEND)", color=[1,0,0,1], size_hint_y=None, height=40))
 
 
 
 class PrincipalScreen(Screen):
     def ir_a_reservas(self):
-        print("Navegando a reservas...")
+        self.manager.current = 'reservas'
+        self.manager.get_screen('reservas').cargar_reservas()
+    
+    def ir_a_reviews(self):
+        self.manager.current = 'reviews'
+        self.manager.get_screen('reviews').cargar_reviews()
+
+    def ir_a_carta_publica(self):
+        self.manager.current = 'carta'
+        self.manager.get_screen('carta').cargar_platos()
 
     def cerrar_sesion(self):
         self.manager.current = 'inicio'

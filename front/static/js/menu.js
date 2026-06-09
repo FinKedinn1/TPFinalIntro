@@ -36,7 +36,3 @@ const Botones = document.getElementsByClassName("boton-filtrar");
 
         }); 
     }
-
-
-
-

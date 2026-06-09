@@ -14,7 +14,7 @@ def get_db_connection():
 def get_db_connection():
     connection = pymysql.connect(
         host='localhost',
-        user='lara',                      # Cambiado 'lara' por 'root'
+        user='lautaro',                      # Cambiado 'lara' por 'root'
         password='1234',                      # Dejado completamente vacío (sin el '1234')
         database='restaurante_medieval',        # Cambiado al nombre que pusimos en Workbench
         cursorclass=pymysql.cursors.DictCursor

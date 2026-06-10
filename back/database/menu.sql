@@ -39,7 +39,7 @@ VALUES
 'Postres'
 ),
 (
-'Costillas del Dragón',
+'Costillas del Palacio Real',
 'Costillas glaseadas con salsa de miel y especias',
 12500,
 'Plato Principal'

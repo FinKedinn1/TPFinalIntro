@@ -121,8 +121,16 @@ def reservaciones():
 
     response = requests.get(f"{API_BACKEND}/reservas")
     reservas = response.json()
+    
+    exito = request.args.get("exito") 
+    return render_template("reservas.html", reservas=reservas, exito=exito)
 
-    return render_template("reservas.html", reservas=reservas)
+@app.route("/cancelar_reserva/<int:id>")
+def cancelar_reserva_front(id):
+
+    requests.get(f"{API_BACKEND}/reservas/cancelar/{id}")
+
+    return redirect(url_for("reservaciones", exito="Reserva cancelada"))
 
 @app.route("/reseñas", methods=["GET", "POST"])
 def reseñas():

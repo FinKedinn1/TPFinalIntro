@@ -29,6 +29,7 @@ Menu - La Taberna del Dragón
         <p>{{ plato.descripcion }}</p>
         <p>{{ plato.precio }}</p>
         <p>{{ plato.categoria }}</p>
+        <img src="{{ url_for('static', filename='images/' + plato.nombre_plato + '.jpg') }}" class="imagen-menu"></img>
     </div>
     {% endfor %}
     </div>

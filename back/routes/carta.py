@@ -44,4 +44,3 @@ def categoria_plato(categoria):
     cursor.close()
     connection.close()
     return jsonify(resultado)
-

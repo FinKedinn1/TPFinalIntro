@@ -19,7 +19,7 @@ def obtener_usuarios():
     cursor.close()
     connection.close()
 
-    return jsonify(usuarios)
+    return jsonify(usuarios), 200
 
 @registro_usuarios_bp.route('/usuarios/<int:id_usuario>', methods=['GET'])
 def obtener_usuario(id_usuario):
@@ -38,41 +38,61 @@ def obtener_usuario(id_usuario):
     cursor.close()
     connection.close()
 
-    return jsonify(usuario)
+    if not usuario:
+        return jsonify({"error": "Usuario no encontrado"}), 404
+
+    return jsonify(usuario), 200
 
 @registro_usuarios_bp.route('/usuarios', methods=['POST'])
 def crear_usuario():
     data = request.get_json()
 
-    nombre = data['nombre']
-    email = data['email']
-    password = data['password']
+    nombre = data.get('nombre')
+    email = data.get('email')
+    password = data.get('password')
+
+    if not nombre or not email or not password:
+        return jsonify({"error": "No puede haber campos vacios"}), 400
+    
+    if "@" not in email or "." not in email.split("@")[-1]:
+        return jsonify({"error": "Email invalido"}), 400
+    
+    if len(password) < 4:
+        return jsonify({"error": "La contraseña debe contener al menos 4 caracteres"}), 400
 
     connection = get_db_connection()
     cursor = connection.cursor()
 
-    query = """
-    INSERT INTO usuarios (nombre, email, password)
-    VALUES (%s, %s, %s)
-    """
+    try: 
+        query = """
+        INSERT INTO usuarios (nombre, email, password)
+        VALUES (%s, %s, %s)
+        """
 
-    cursor.execute(query, (nombre, email, password))
-    connection.commit()
+        cursor.execute(query, (nombre, email, password))
+        connection.commit()
 
-    cursor.close()
-    connection.close()
-
+    except Exception:
+        return jsonify({"error": "El email ya esta registrado"}), 400
+    
+    finally:
+        cursor.close()
+        connection.close()
+    
     return jsonify({
         "mensaje": "Usuario creado correctamente"
-    })
+    }), 201
 
 @registro_usuarios_bp.route('/usuarios/<int:id_usuario>', methods=['PUT'])
 def actualizar_usuario(id_usuario):
 
     data = request.get_json()
 
-    nombre = data['nombre']
-    email = data['email']
+    nombre = data.get('nombre')
+    email = data.get('email')
+
+    if not nombre or not email:
+        return jsonify({"error": "Se debe completar el email y el nombre"}), 400
 
     connection = get_db_connection()
     cursor = connection.cursor()
@@ -91,7 +111,7 @@ def actualizar_usuario(id_usuario):
 
     return jsonify({
         "mensaje": "Usuario actualizado"
-    })
+    }), 200
 
 @registro_usuarios_bp.route('/usuarios/<int:id_usuario>', methods=['DELETE'])
 def eliminar_usuario(id_usuario):
@@ -109,15 +129,18 @@ def eliminar_usuario(id_usuario):
 
     return jsonify({
         "mensaje": "Usuario eliminado"
-    })
+    }), 200
 
 @registro_usuarios_bp.route('/login', methods=['POST'])
 def login():
 
     data = request.get_json()
 
-    email = data['email']
-    password = data['password']
+    email = data.get('email')
+    password = data.get('password')
+
+    if not email or not password:
+        return jsonify({"error": "El email y la contraseña son obligatorios"}), 400
 
     connection = get_db_connection()
     cursor = connection.cursor()
@@ -134,12 +157,12 @@ def login():
     cursor.close()
     connection.close()
 
-    if usuario:
+    if not usuario:
         return jsonify({
-            "mensaje": "Login exitoso",
-            "usuario": usuario
-        })
+            "error": "Email o contraseña incorrectos"
+        }), 401
 
     return jsonify({
-        "mensaje": "Email o contraseña incorrectos"
-    }), 401
+        "mensaje": "Login exitoso",
+        "usuario": usuario
+    }), 200

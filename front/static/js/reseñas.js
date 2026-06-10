@@ -14,4 +14,3 @@ for (let i = 0; i < estrellas.length; i++) {
         document.getElementById("puntaje_estrellas").value = i + 1;
     });
 }
-

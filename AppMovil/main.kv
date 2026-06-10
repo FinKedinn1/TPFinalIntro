@@ -12,8 +12,8 @@ ScreenManager:
         id: carta_screen
     ReservasScreen:
         name: 'reservas'
-    ReviewScreen:
-        name: 'reviews'
+    ReseniaScreen:
+        name: 'resenias'
 
 <Label>:
     font_name: 'MedievalSharp-Book'
@@ -267,10 +267,10 @@ ScreenManager:
             on_press: root.ir_a_reservas()
 
         Button:
-            text: 'Mis Reviews'
+            text: 'Mis Resenias'
             size_hint_y: None
             height: 50
-            on_press: root.ir_a_reviews()
+            on_press: root.ir_a_resenias()
 
 
         Button:
@@ -309,7 +309,33 @@ ScreenManager:
                 size_hint_x: None
                 width: 80
                 on_press: root.manager.current = 'principal'
+        TextInput:
+            id: cant_personas_input
+            hint_text: 'Ingrese la cantidad de personas'
+            multiline: False
+            size_hint_y: None
+            height: 44
         
+        TextInput:
+            id: fecha_reserva_input
+            hint_text: 'YYYY-MM-DD'
+            multiline: False
+            size_hint_y: None
+            height: 44
+
+        Spinner:
+            id: turno_input
+            text: "Seleccionar opción"
+            values: ["20-22", "22-00"]
+            size_hint_y: None
+            height: 44
+            background_color: [1, 1, 1, 1]
+
+        Button:
+            text: 'Crear Reserva'
+            size_hint_y: None
+            height: 50
+            on_press: root.crear_reserva(cant_personas_input.text)
         ScrollView:
             do_scroll_x: False
             do_scroll_y: True
@@ -332,8 +358,14 @@ ScreenManager:
                     Line:
                         rounded_rectangle: (self.x + 5, self.y + 5, self.width - 10, self.height - 10, 10)
                         width: 1.5
+        Label:
+            id: mensaje_reserva
+            text: ''
+            color: [1, 0, 0, 1]
+            size_hint_y: None
+            height: 30
                     
-<ReviewScreen>:
+<ReseniaScreen>:
     BoxLayout:
         orientation: 'vertical'
         padding: [15, 20, 15, 20]
@@ -354,12 +386,19 @@ ScreenManager:
                 text: 'Volver'
                 size_hint_x: None
                 width: 80
-                on_press: root.manager.current = 'inicio'
+                on_press: root.manager.current = 'principal'
+        
+        #Spinner:
+            #id: id_reserva
+            #text: "opcion"
+            #size_hint_y: None
+            #height: 44
+        
         ScrollView:
             do_scroll_x: False
             do_scroll_y: True
             BoxLayout:
-                id: lista_review
+                id: lista_resenias
                 orientation: 'vertical'
                 size_hint_y: None
                 height: self.minimum_height

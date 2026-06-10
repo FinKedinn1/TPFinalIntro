@@ -1,4 +1,3 @@
-
 from flask import Flask, render_template, redirect, url_for, request, session
 import requests
 import os
@@ -6,7 +5,6 @@ import os
 API_BACKEND = os.environ.get("API_BACKEND", "http://127.0.0.1:5000")
 app = Flask(__name__)
 app.secret_key = "clave_secreta"
-
 
 @app.route("/", methods=["GET", "POST"])
 def index():
@@ -123,13 +121,21 @@ def reservaciones():
 
     response = requests.get(f"{API_BACKEND}/reservas")
     reservas = response.json()
+    
+    exito = request.args.get("exito") 
+    return render_template("reservas.html", reservas=reservas, exito=exito)
 
-    return render_template("reservas.html", reservas=reservas)
+@app.route("/cancelar_reserva/<int:id>")
+def cancelar_reserva_front(id):
 
-@app.route("/reseñas", methods=["GET", "POST"])
+    requests.get(f"{API_BACKEND}/reservas/cancelar/{id}")
+
+    return redirect(url_for("reservaciones", exito="Reserva cancelada"))
+
+@app.route("/resenias", methods=["GET", "POST"])
 def reseñas():
 
-    response = requests.get(f"{API_BACKEND}/reseñas")
+    response = requests.get(f"{API_BACKEND}/resenias")
     reseñas = response.json()
 
     response_platos = requests.get(f"{API_BACKEND}/carta")
@@ -178,7 +184,7 @@ def reseñas():
             "puntaje_estrellas": int(puntaje_estrellas)
         }
 
-        respuesta = requests.post(f"{API_BACKEND}/reseñas", json=data)
+        respuesta = requests.post(f"{API_BACKEND}/resenias", json=data)
 
         if respuesta.status_code != 201:
             return render_template(
@@ -202,23 +208,26 @@ def logout():
     session.pop("usuario", None)
     return redirect(url_for("index"))
 
-
 @app.route("/admin")
 def admin():
+    if not session.get("admin"):
+        return redirect(url_for("admin_login"))
     return render_template("admin/dashboard.html")
 
 @app.route("/admin/login", methods=["GET", "POST"])
 def admin_login():
     if request.method == "POST":
         datos_admin = {
-            "email": request.form["email"],
-            "password": request.form["password"]
+            "email": request.form.get("email"),
+            "password": request.form.get("password")
         }
         respuesta = requests.post(f"{API_BACKEND}/login", json=datos_admin)        
         if respuesta.status_code == 200:
+            session["admin"]=True
             return redirect(url_for("admin"))
+        else:
+            return "Login fallido", 401       
     return render_template('admin/login.html')
-
 
 @app.route("/admin/registro", methods=["GET", "POST"])
 def admin_registro():
@@ -233,22 +242,22 @@ def admin_registro():
             return redirect(url_for("admin_login"))
     return render_template("admin/registro.html")
 
-
 @app.route("/admin/menu", methods=["GET", "POST"])
 def admin_menu():
+    if "admin" not in session:
+        return redirect(url_for("admin_login"))
     if request.method == "POST":
         datos_plato = {
             "nombre": request.form.get("nombre"),
-            "precio": request.form.get("precio")
+            "precio": request.form.get("precio"),
+            "categoria": request.form.get("categoria"),
+            "descripcion": request.form.get("descripcion")
         }
 
         respuesta = requests.post(f"{API_BACKEND}/admin/menu", json=datos_plato)
-        
         if respuesta.status_code == 201:
             return redirect(url_for("admin_menu"))
-
-        return "Error al agregar plato", 500
-
+        return "Error al agregar plato al servidor", 500
     respuesta = requests.get(f"{API_BACKEND}/carta")
     lista_platos = respuesta.json()
     return render_template("admin/menu.html", platos=lista_platos)
@@ -259,13 +268,18 @@ def admin_reservas():
     lista_reservas = respuesta.json()
     return render_template("admin/reservas.html", reservas=lista_reservas)
 
+@app.route("/admin/historial_reservas")
+def admin_historial_reservas():
+    respuesta = requests.get(f"{API_BACKEND}/reservas")
+    historial_reservas = respuesta.json()
+    return render_template("admin/historial_reservas.html", historial_reservas=historial_reservas)
 
-@app.route("/admin/reseñas")
+@app.route("/admin/resenias")
 def admin_reseñas():
-    respuesta = requests.get(f"{API_BACKEND}/reseñas")
+    respuesta = requests.get(f"{API_BACKEND}/resenias")
 
     lista_reseñas = respuesta.json()
-    return render_template("admin/reseñas.html", reseñas=lista_reseñas)
+    return render_template("admin/resenias.html", reseñas=lista_reseñas)
 
 @app.route("/admin/menu/borrar/<int:id_plato>", methods=["POST"])
 def admin_menu_borrar(id_plato):

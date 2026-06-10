@@ -3,8 +3,10 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.network.urlrequest import UrlRequest
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.label import Label
+from kivy.uix.image import Image
 from kivy.lang import Builder
 from kivy.core.text import LabelBase
+from datetime import datetime
 import json
 import os
 
@@ -60,8 +62,18 @@ class CartaScreen(Screen):
                 nombre = plato[1]
                 precio = plato[3] if len(plato) > 3 else ""
 
+            imagen_url = f"assets/images/{nombre}.jpg"
+
             texto_plato = f"{nombre} - ${precio}" if precio else f"{nombre}"
             
+            contenedor = BoxLayout(
+                orientation='vertical',
+                size_hint_y=None,
+                height=200,
+                padding=5,
+                spacing=5
+            )
+
             lbl = Label(
                 text=texto_plato,
                 font_size='18sp',
@@ -71,7 +83,19 @@ class CartaScreen(Screen):
                 size_hint_y=None,
                 height=40
             )
-            self.ids.lista_platos.add_widget(lbl)
+
+            img = Image(
+                source=imagen_url if imagen_url else "placeholder.png",
+                size_hint_y=None,
+                height=150,
+                allow_stretch=True,
+                keep_ratio=True
+            )
+
+            contenedor.add_widget(lbl)
+            contenedor.add_widget(img)
+
+            self.ids.lista_platos.add_widget(contenedor)
 
     def error_carga(self, req, error):
         if 'lista_platos' in self.ids:
@@ -98,7 +122,9 @@ class LoginScreen(Screen):
 
     def login_exitoso(self, req, result):
         user_data = result.get('usuario')
-        nombre_usuario = user_data['nombre'] if isinstance(user_data, dict) else user_data[1]
+        user_id = user_data['id_usuario'] if isinstance(user_data, dict) else user_data[1]
+        App.get_running_app().user_id = user_id
+        nombre_usuario = user_data['nombre'] if isinstance(user_data, dict) else user_data[2]
         
         pantalla_principal = self.manager.get_screen('principal')
         pantalla_principal.ids.bienvenido_label.text = f"¡Hola, {nombre_usuario}!"
@@ -152,6 +178,43 @@ class RegistroScreen(Screen):
         self.ids.mensaje_registro.text = "Error de conexión."
 
 class ReservasScreen(Screen):
+    def obtener_fecha(self):
+        fecha_str = self.ids.fecha_reserva_input.text
+
+        try:
+            fecha = datetime.strptime(fecha_str, "%Y-%m-%d")
+            return fecha.strftime("%Y-%m-%d")
+        except Exception as e:
+            print(f"Error: {e}")
+
+    def crear_reserva(self, cant_personas):
+        turno = self.ids.turno_input.text
+
+        user_id = App.get_running_app().user_id
+
+        fecha_reserva=self.obtener_fecha()
+
+        cant_personas = int(cant_personas)
+
+        if not cant_personas or not fecha_reserva or not turno or not user_id:
+            self.ids.mensaje_reserva.text = "Completa todos los campos."
+            print(cant_personas, fecha_reserva, turno, user_id)
+            return
+        
+        print(cant_personas, fecha_reserva, turno, user_id)
+
+        paquete = {"id_usuario": user_id, "cant_personas": cant_personas, "fecha_reserva": fecha_reserva, "turno": turno}
+        headers = {'Content-Type': 'application/json'}
+
+        UrlRequest(
+            f"{BASE_URL}/reservas",
+            req_body=json.dumps(paquete),
+            req_headers=headers,
+            on_success=self.reservas_cargadas_ok,
+            on_failure=lambda req, res: print("FAIL:", res),
+            on_error=lambda req, err: print("ERROR", err)
+        )
+
     def cargar_reservas(self):
         if 'lista_reservas' in self.ids:
             self.ids.lista_reservas.clear_widgets()
@@ -193,44 +256,56 @@ class ReservasScreen(Screen):
             self.ids.lista_reservas.add_widget(Label(text="Error al cargar tus reservas. (ERROR BACKEND)", color=[1,0,0,1], size_hint_y=None, height=40))
 
 
-class ReviewScreen(Screen):
-    def cargar_reviews(self):
-        if 'lista_reviews' in self.ids:
-            self.ids.lista_reviews.clear_widgets()
-        
+class ReseniaScreen(Screen):
+    #def obtener_reservas(self):
+        #if 'lista_resenias' in self.ids:
+            #self.ids.lista_resenias.clear_widgets()
+
+        #UrlRequest(
+            #f"{BASE_URL}/reservas",
+            #on_success=self.resenias_cargadas_ok,
+            #on_failure=lambda req, res: print("FAIL:", res),
+            #on_error=lambda req, err: print("ERROR:", err)
+        #)    
+    def cargar_resenias(self):
+        if 'lista_resenias' in self.ids:
+            self.ids.lista_resenias.clear_widgets()
+
         UrlRequest(
-            f"{BASE_URL}/reseñas",
-            on_success=self.reviews_cargadas_ok,
+            f"{BASE_URL}/resenias",
+            on_success=self.resenias_cargadas_ok,
             on_failure=self.error_carga,
             on_error=self.error_carga
         )
-    def reviews_cargadas_ok(self, req, result):
-        if 'lista_reviews' not in self.ids:
+    def resenias_cargadas_ok(self, req, result):
+        if 'lista_resenias' not in self.ids:
             return
         
-        if not result:
-            self.ids.lista_reviews.add_widget(Label(text="No has dejado reviews aún.", size_hint_y=None, height=40))
-            return
-        
-        reviews = result
+        #self.ids.id_reserva.values = [str(i) for i in range(10)]
 
-        for review in reviews:
-            plato = review.get('id_plato') if isinstance(review, dict) else review[2]
-            comentario = review.get('comentario') if isinstance(review, dict) else review[3]
-            texto_review = f"{plato} - {comentario}"
+        if not result:
+            self.ids.lista_resenias.add_widget(Label(text="No has dejado reseñas aún.", size_hint_y=None, height=40))
+            return
+
+        resenias = result
+
+        for resenia in resenias:
+            plato = resenia.get('nombre_plato') if isinstance(resenia, dict) else resenia[2]
+            comentario = resenia.get('comentario') if isinstance(resenia, dict) else resenia[3]
+            texto_resenia = f"{plato} - {comentario}"
             lbl = Label(
-                text=texto_review, 
+                text=texto_resenia, 
                 size_hint_y=None, 
                 height=45,
                 color=[0.8,0.6,0.1,1],
                 outline_width=1,
                 outline_color=[0, 0, 0, 1]
                 )
-            self.ids.lista_reviews.add_widget(lbl)
+            self.ids.lista_resenias.add_widget(lbl)
             
     def error_carga(self, req, error):
-        if 'lista_reviews' in self.ids:
-            self.ids.lista_reviews.add_widget(Label(text="Error al cargar tus reviews. (ERROR BACKEND)", color=[1,0,0,1], size_hint_y=None, height=40))
+        if 'lista_resenias' in self.ids:
+            self.ids.lista_resenias.add_widget(Label(text="Error al cargar tus resenias. (ERROR BACKEND)", color=[1,0,0,1], size_hint_y=None, height=40))
 
 
 
@@ -239,9 +314,9 @@ class PrincipalScreen(Screen):
         self.manager.current = 'reservas'
         self.manager.get_screen('reservas').cargar_reservas()
     
-    def ir_a_reviews(self):
-        self.manager.current = 'reviews'
-        self.manager.get_screen('reviews').cargar_reviews()
+    def ir_a_resenias(self):
+        self.manager.current = 'resenias'
+        self.manager.get_screen('resenias').cargar_resenias()
 
     def ir_a_carta_publica(self):
         self.manager.current = 'carta'

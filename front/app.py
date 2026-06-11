@@ -199,6 +199,11 @@ def reseñas():
 
     return render_template("reseñas.html", reseñas=reseñas, platos=platos, reservas_usuario=reservas_usuario)
 
+
+@app.route("/contacto")
+def contacto():
+    return render_template("contacto.html")
+
 @app.errorhandler(404)
 def pagina_no_encontrada(error):
     return render_template("404.html"), 404

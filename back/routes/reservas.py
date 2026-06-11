@@ -37,15 +37,15 @@ def enviar_email(destinatario, datos_qr, path_qr, link_cancelacion):
     </a>
     """
 
-    mensaje.attach(MIMEText(html, "html"))  #coloca el texto en el mail
+    mensaje.attach(MIMEText(html, "html"))
 
-    with open(path_qr, "rb") as f:  #abre la imagen en modo binario
-        img = MIMEImage(f.read())  #la convierte en formato adjuntable
-        img.add_header("Content-ID", "<qr>")  #qr es el ID de la imagen lo conecta con img src="cid:qr"
-        mensaje.attach(img)  #agrega la imagen
+    with open(path_qr, "rb") as f:
+        img = MIMEImage(f.read()) 
+        img.add_header("Content-ID", "<qr>") 
+        mensaje.attach(img)  
 
-    with smtplib.SMTP("smtp.gmail.com", 587) as server:  #conecta al servidor
-        server.starttls()  #conexion segura
+    with smtplib.SMTP("smtp.gmail.com", 587) as server: 
+        server.starttls()  
         server.login(remitente, password)
         server.send_message(mensaje)
 

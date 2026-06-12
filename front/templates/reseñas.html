@@ -64,6 +64,13 @@
                     <span class="estrella" data-rating="3">★</span>
                     <span class="estrella" data-rating="4">★</span>
                     <span class="estrella" data-rating="5">★</span>
+                    <label for="filtro-plato">Filtrar por plato:</label>
+                    <select id="filtro-plato">
+                    <option value="all">Todos los platos</option>
+                    {% for plato in platos %}
+                    <option value="{{ plato.nombre_plato }}">{{ plato.nombre_plato }}</option>
+                    {% endfor %}
+                    </select>
                 </div>
                 <input type="hidden" name="puntaje_estrellas" id="puntaje_estrellas">
             </div>   
@@ -86,12 +93,12 @@
         </form>
 
     </div>
-
+    
     <div id="contenedor-reseñas">
 
         {% for reseña in reseñas %}
 
-        <div class="parchment-card">
+        <div class="parchment-card reseña" info-plato="{{ reseña.nombre_plato }}">
             <p><strong>Comentario:</strong> {{ reseña.comentario }}</p>
             <p><strong>⭐</strong> {{ reseña.puntaje_estrellas }}</p>
             {% if reseña.nombre_plato %}

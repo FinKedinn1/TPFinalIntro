@@ -43,10 +43,10 @@ def crear_reseña():
     if puntaje < 1 or puntaje > 5:
         return {"Error": "Puntaje invàlido"}, 400
     
-    id_reserva = data.get("id_reserva")
-    comentario = data.get("comentario")
-    puntaje = int(data.get("puntaje_estrellas"))
-    id_plato = data.get("id_plato")
+    #id_reserva = data.get("id_reserva")
+    #comentario = data.get("comentario")
+    #puntaje = int(data.get("puntaje_estrellas"))
+    #id_plato = data.get("id_plato")
 
     if puntaje < 1 or puntaje > 5:
         return jsonify({
@@ -61,8 +61,8 @@ def crear_reseña():
         reserva = cursor.fetchone()
 
         if not reserva:
-            cursor.close()
-            connection.close()
+            #cursor.close()
+            #connection.close()
             return {"Error": "La reserva no existe"}, 404
 
         sql = "INSERT INTO reseñas (id_reserva, comentario, puntaje_estrellas, id_plato) VALUES (%s, %s, %s, %s)"

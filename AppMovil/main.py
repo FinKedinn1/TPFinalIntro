@@ -5,6 +5,7 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.label import Label
 from kivy.uix.image import Image
 from kivy.lang import Builder
+from kivy.factory import Factory
 from kivy.core.text import LabelBase
 from datetime import datetime
 import json
@@ -65,37 +66,12 @@ class CartaScreen(Screen):
             imagen_url = f"assets/images/{nombre}.jpg"
 
             texto_plato = f"{nombre} - ${precio}" if precio else f"{nombre}"
-            
-            contenedor = BoxLayout(
-                orientation='vertical',
-                size_hint_y=None,
-                height=200,
-                padding=5,
-                spacing=5
-            )
 
-            lbl = Label(
-                text=texto_plato,
-                font_size='18sp',
-                color=[1,1,1,1],
-                outline_width=1,
-                outline_color=[0, 0, 0, 1],
-                size_hint_y=None,
-                height=40
-            )
+            item = Factory.CartaItem()
+            item.texto = texto_plato
+            item.imagen = imagen_url
 
-            img = Image(
-                source=imagen_url if imagen_url else "placeholder.png",
-                size_hint_y=None,
-                height=150,
-                allow_stretch=True,
-                keep_ratio=True
-            )
-
-            contenedor.add_widget(lbl)
-            contenedor.add_widget(img)
-
-            self.ids.lista_platos.add_widget(contenedor)
+            self.ids.lista_platos.add_widget(item)
 
     def error_carga(self, req, error):
         if 'lista_platos' in self.ids:
@@ -241,15 +217,11 @@ class ReservasScreen(Screen):
             cantidad = reserva.get('cant_personas') if isinstance(reserva, dict) else reserva[4]
             estado = reserva.get('estado') if isinstance(reserva, dict) else reserva[5]
             texto_reserva = f"{fecha} a las {hora} - {cantidad} personas - {estado}"
-            lbl = Label(
-                text=texto_reserva, 
-                size_hint_y=None, 
-                height=45,
-                color=[1,1,1,1],
-                outline_width=1,
-                outline_color=[0, 0, 0, 1]
-                )
-            self.ids.lista_reservas.add_widget(lbl)
+            
+            item = Factory.ReseniaItem()
+            item.texto = texto_reserva
+
+            self.ids.lista_reservas.add_widget(item)
 
     def error_carga(self, req, error):
         if 'lista_reservas' in self.ids:
@@ -257,16 +229,66 @@ class ReservasScreen(Screen):
 
 
 class ReseniaScreen(Screen):
-    #def obtener_reservas(self):
-        #if 'lista_resenias' in self.ids:
-            #self.ids.lista_resenias.clear_widgets()
+    def crear_resenia(self, comentario):
+        reserva = self.ids.drop_reservas.text
 
-        #UrlRequest(
-            #f"{BASE_URL}/reservas",
-            #on_success=self.resenias_cargadas_ok,
-            #on_failure=lambda req, res: print("FAIL:", res),
-            #on_error=lambda req, err: print("ERROR:", err)
-        #)    
+        puntuacion = self.ids.puntuacion.text
+
+        plato = self.ids.drop_platos.text
+
+        reserva = reserva.split("-")
+
+        puntuacion = int(puntuacion)
+
+        plato = plato.split("-")
+
+        if not reserva or not plato or not comentario or not puntuacion:
+            self.ids.mensaje_resenia.text = "Faltan datos para hacer la reseña"
+            print(reserva, puntuacion, plato, comentario)
+            return
+        
+        print(reserva, puntuacion, plato, comentario)
+
+        paquete = {"id_reserva": reserva[0], "id_plato": plato[0], "comentario": comentario, "puntaje_estrellas": puntuacion}
+        headers = {'Content-Type': 'application/json'}
+
+        UrlRequest(
+            f"{BASE_URL}/resenias",
+            req_body=json.dumps(paquete),
+            req_headers=headers,
+            on_success=self.resenias_cargadas_ok,
+            on_failure=lambda req, res: print("FAIL:", res),
+            on_error=lambda req, err: print("ERROR", err)
+        )
+    
+    def cargar_reservas(self):
+        UrlRequest(f"{BASE_URL}/reservas", on_success=self.on_reservas)
+
+    def on_reservas(self, req, result):
+        self.reservas_map = {}
+
+        lista = []
+        for r in result:
+            texto = f"{r['id_reserva']} - {r['fecha_reserva']}"
+            lista.append(texto)
+            self.reservas_map[texto] = r
+
+        self.ids.drop_reservas.values = lista
+
+    def cargar_platos(self):
+        UrlRequest(f"{BASE_URL}/carta", on_success=self.on_platos)
+
+    def on_platos(self, req, result):
+        self.platos_map = {}
+
+        lista = []
+        for r in result:
+            texto = f"{r['id_plato']}-{r['nombre_plato']}"
+            lista.append(texto)
+            self.platos_map[texto] = r
+
+        self.ids.drop_platos.values = lista
+
     def cargar_resenias(self):
         if 'lista_resenias' in self.ids:
             self.ids.lista_resenias.clear_widgets()
@@ -277,11 +299,16 @@ class ReseniaScreen(Screen):
             on_failure=self.error_carga,
             on_error=self.error_carga
         )
+
     def resenias_cargadas_ok(self, req, result):
         if 'lista_resenias' not in self.ids:
             return
         
-        #self.ids.id_reserva.values = [str(i) for i in range(10)]
+        self.cargar_reservas()
+
+        self.ids.puntuacion.values = [str(i) for i in range(1,6)]
+
+        self.cargar_platos()
 
         if not result:
             self.ids.lista_resenias.add_widget(Label(text="No has dejado reseñas aún.", size_hint_y=None, height=40))
@@ -292,16 +319,13 @@ class ReseniaScreen(Screen):
         for resenia in resenias:
             plato = resenia.get('nombre_plato') if isinstance(resenia, dict) else resenia[2]
             comentario = resenia.get('comentario') if isinstance(resenia, dict) else resenia[3]
+
             texto_resenia = f"{plato} - {comentario}"
-            lbl = Label(
-                text=texto_resenia, 
-                size_hint_y=None, 
-                height=45,
-                color=[0.8,0.6,0.1,1],
-                outline_width=1,
-                outline_color=[0, 0, 0, 1]
-                )
-            self.ids.lista_resenias.add_widget(lbl)
+            
+            item = Factory.ReseniaItem()
+            item.texto = texto_resenia
+
+            self.ids.lista_resenias.add_widget(item)
             
     def error_carga(self, req, error):
         if 'lista_resenias' in self.ids:

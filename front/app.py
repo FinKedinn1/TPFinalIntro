@@ -132,7 +132,7 @@ def cancelar_reserva_front(id):
 
     return redirect(url_for("reservaciones", exito="Reserva cancelada"))
 
-@app.route("/resenias", methods=["GET", "POST"])
+@app.route("/reseñas", methods=["GET", "POST"])
 def reseñas():
 
     response = requests.get(f"{API_BACKEND}/resenias")
@@ -274,12 +274,12 @@ def admin_historial_reservas():
     historial_reservas = respuesta.json()
     return render_template("admin/historial_reservas.html", historial_reservas=historial_reservas)
 
-@app.route("/admin/resenias")
+@app.route("/admin/reseñas")
 def admin_reseñas():
     respuesta = requests.get(f"{API_BACKEND}/resenias")
 
     lista_reseñas = respuesta.json()
-    return render_template("admin/resenias.html", reseñas=lista_reseñas)
+    return render_template("admin/reseñas.html", reseñas=lista_reseñas)
 
 @app.route("/admin/menu/borrar/<int:id_plato>", methods=["POST"])
 def admin_menu_borrar(id_plato):

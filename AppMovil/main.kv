@@ -122,18 +122,44 @@ ScreenManager:
                 height: self.minimum_height
                 spacing: 10
 
-                canvas.before:
-                    Color:
-                        rgba: [0.169, 0.122, 0.078, 1]
-                    RoundedRectangle:
-                        pos: self.pos
-                        size: self.size
-                        radius: [10]
-                    Color:
-                        rgba: [0.29, 0.2, 0.14, 1]
-                    Line:
-                        rounded_rectangle: (self.x + 5, self.y + 5, self.width - 10, self.height - 10, 10)
-                        width: 1.5
+<CartaItem@BoxLayout>:
+    texto: ""
+    imagen: ""
+
+    orientation: 'vertical'
+    size_hint_y: None
+    padding: 10
+    spacing: 5
+    height: self.minimum_height
+
+    canvas.before:
+        Color:
+            rgba: [0.169, 0.122, 0.078, 1]
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [10]
+        Color:
+            rgba: [0.29, 0.2, 0.14, 1]
+        Line:
+            rounded_rectangle: (self.x + 5, self.y + 5, self.width - 10, self.height - 10, 10)
+            width: 1.5
+
+    Label:
+        text: root.texto
+        text_size: self.width, None
+        size_hint_y: None
+        height: self.texture_size[1]
+        halign: 'center'
+        valign: 'top'
+        color: [0.8,0.6,0.1,1]
+    
+    Image:
+        source: root.imagen
+        size_hint_y: None
+        height: 150
+        allow_stretch: True
+        keep_ratio: True
 
 <LoginScreen>:
     BoxLayout:
@@ -345,25 +371,43 @@ ScreenManager:
                 size_hint_y: None
                 height: self.minimum_height
                 spacing: 10
-
-                canvas.before:
-                    Color:
-                        rgba: [0.169, 0.122, 0.078, 1]
-                    RoundedRectangle:
-                        pos: self.pos
-                        size: self.size
-                        radius: [10]
-                    Color:
-                        rgba: [0.29, 0.2, 0.14, 1]
-                    Line:
-                        rounded_rectangle: (self.x + 5, self.y + 5, self.width - 10, self.height - 10, 10)
-                        width: 1.5
         Label:
             id: mensaje_reserva
             text: ''
             color: [1, 0, 0, 1]
             size_hint_y: None
             height: 30
+
+<ReservaItem@BoxLayout>:
+    texto: ""
+
+    orientation: 'vertical'
+    size_hint_y: None
+    padding: 10
+    spacing: 5
+    height: self.minimum_height
+
+    canvas.before:
+        Color:
+            rgba: [0.169, 0.122, 0.078, 1]
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [10]
+        Color:
+            rgba: [0.29, 0.2, 0.14, 1]
+        Line:
+            rounded_rectangle: (self.x + 5, self.y + 5, self.width - 10, self.height - 10, 10)
+            width: 1.5
+
+    Label:
+        text: root.texto
+        text_size: self.width, None
+        size_hint_y: None
+        height: self.texture_size[1]
+        halign: 'center'
+        valign: 'top'
+        color: [0.8,0.6,0.1,1]
                     
 <ReseniaScreen>:
     BoxLayout:
@@ -376,7 +420,7 @@ ScreenManager:
             height: 50
             orientation: 'horizontal'
             Label:
-                text: 'Reseñas de Clientes'
+                text: 'Reseñas de Clientes' 
                 color: [0.8,0.6,0.1,1]
                 outline_width: 1
                 font_size: '24sp'
@@ -388,12 +432,36 @@ ScreenManager:
                 width: 80
                 on_press: root.manager.current = 'principal'
         
-        #Spinner:
-            #id: id_reserva
-            #text: "opcion"
-            #size_hint_y: None
-            #height: 44
+        Spinner:
+            id: drop_reservas
+            text: "Eliga la reserva a reseñar"
+            size_hint_y: None
+            height: 44
         
+        Spinner:
+            id: drop_platos
+            text: "Eliga el plato a reseñar"
+            size_hint_y: None
+            height: 44
+
+        Spinner:
+            id: puntuacion
+            text: "Eliga un puntaje del 1 al 5"
+            size_hint_y: None
+            height: 44
+
+        TextInput:
+            id: comentario_input
+            hint_text: 'Escriba un comentario sobre la comida'
+            size_hint_y: None
+            height:44
+
+        Button:
+            text: 'Confirmar Reseña'
+            size_hint_y: None
+            height: 44
+            on_press: root.crear_resenia(comentario_input.text)
+
         ScrollView:
             do_scroll_x: False
             do_scroll_y: True
@@ -403,3 +471,41 @@ ScreenManager:
                 size_hint_y: None
                 height: self.minimum_height
                 spacing: 10
+                
+        Label:
+            id: mensaje_resenia
+            text: ''
+            color: [1, 0, 0, 1]
+            size_hint_y: None
+            height: 30
+
+<ReseniaItem@BoxLayout>:
+    texto: ""
+
+    orientation: 'vertical'
+    size_hint_y: None
+    padding: 10
+    spacing: 5
+    height: self.minimum_height
+
+    canvas.before:
+        Color:
+            rgba: [0.169, 0.122, 0.078, 1]
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [10]
+        Color:
+            rgba: [0.29, 0.2, 0.14, 1]
+        Line:
+            rounded_rectangle: (self.x + 5, self.y + 5, self.width - 10, self.height - 10, 10)
+            width: 1.5
+
+    Label:
+        text: root.texto
+        text_size: self.width, None
+        size_hint_y: None
+        height: self.texture_size[1]
+        halign: 'center'
+        valign: 'top'
+        color: [0.8,0.6,0.1,1]

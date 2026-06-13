@@ -1,6 +1,7 @@
 from flask import Flask, render_template, redirect, url_for, request, session
 import requests
 import os
+from functools import wraps
 
 API_BACKEND = os.environ.get("API_BACKEND", "http://127.0.0.1:5000")
 app = Flask(__name__)
@@ -197,10 +198,19 @@ def pagina_no_encontrada(error):
 
 @app.route("/logout")
 def logout():
-    session.pop("usuario", None)
+    session.clear() 
     return redirect(url_for("index"))
 
+def admin_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not session.get("admin"):
+            return redirect(url_for("admin_login"))
+        return f(*args, **kwargs)
+    return decorated_function
+
 @app.route("/admin")
+@admin_required
 def admin():
     if not session.get("admin"):
         return redirect(url_for("admin_login"))
@@ -235,6 +245,7 @@ def admin_registro():
     return render_template("admin/registro.html")
 
 @app.route("/admin/menu", methods=["GET", "POST"])
+@admin_required
 def admin_menu():
     if "admin" not in session:
         return redirect(url_for("admin_login"))
@@ -255,18 +266,21 @@ def admin_menu():
     return render_template("admin/menu.html", platos=lista_platos)
 
 @app.route("/admin/reservas")
+@admin_required
 def admin_reservas():
     respuesta = requests.get(f"{API_BACKEND}/reservas")
     lista_reservas = respuesta.json()
     return render_template("admin/reservas.html", reservas=lista_reservas)
 
 @app.route("/admin/historial_reservas")
+@admin_required
 def admin_historial_reservas():
     respuesta = requests.get(f"{API_BACKEND}/reservas")
     historial_reservas = respuesta.json()
     return render_template("admin/historial_reservas.html", historial_reservas=historial_reservas)
 
 @app.route("/admin/reseñas")
+@admin_required
 def admin_reseñas():
     respuesta = requests.get(f"{API_BACKEND}/reseñas")
 
@@ -274,9 +288,28 @@ def admin_reseñas():
     return render_template("admin/reseñas.html", reseñas=lista_reseñas)
 
 @app.route("/admin/menu/borrar/<int:id_plato>", methods=["POST"])
+@admin_required
 def admin_menu_borrar(id_plato):
     requests.delete(f"{API_BACKEND}/admin/menu/{id_plato}")
     return redirect(url_for("admin_menu"))
+
+@app.route("/admin/menu/editar/<int:id_plato>", methods=["GET", "POST"])
+@admin_required
+def admin_menu_editar(id_plato):
+    if request.method == "POST":
+        datos_plato = {
+            "nombre": request.form.get("nombre"),
+            "precio": request.form.get("precio"),
+            "categoria": request.form.get("categoria"),
+            "descripcion": request.form.get("descripcion")
+        }
+        requests.put(f"{API_BACKEND}/admin/menu/{id_plato}", json=datos_plato)
+        
+        return redirect(url_for("admin_menu"))
+    respuesta = requests.get(f"{API_BACKEND}/carta/{id_plato}") 
+    plato = respuesta.json()
+    return render_template("admin/editar_plato.html", plato=plato)
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5001, debug=True)

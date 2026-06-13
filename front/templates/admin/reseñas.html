@@ -1,26 +1,25 @@
 {% extends "base.html" %}
-{% block title %}administraciob reseñas{% endblock %}
-
+{% block title %}administracion reseñas{% endblock %}
 {% block content %}
+
 <header class="reseñas-header">
-<h1>administracion de reseñas</h1>
-<p>gestion de las reseñas de los usuarios</p>
+    <h1>administracion de reseñas</h1>
+    <p>gestion de las reseñas de los usuarios</p>
 </header>
 
 <section class="reseñas-section">
-<div class="parchment-card">
-<h2>reseña aceptada</h2>
-{% for reseña in reseñas %}
-<div>
-<p>Puntaje: {{ reseña.puntaje_estrellas }} estrellas</p>
-<p>{{ reseña.comentario }}</p>
-<button>eliminar</button>
-<hr>
-</div>
-{% else %}
-<p>no hay reseñas</p>
-{% endfor %}
-
+    <div class="parchment-card">
+        <h2>reseña aceptada</h2>
+        {% for reseña in reseñas %}
+        <div>
+            <p>Puntaje: {{ reseña.puntaje_estrellas }} estrellas</p>
+            <p>{{ reseña.comentario }}</p>
+            <button>eliminar</button>
+            <hr>
+        </div>
+        {% else %}
+        <p>no hay reseñas</p>
+        {% endfor %}
     </div>
 </section>
 {% endblock %}

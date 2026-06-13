@@ -110,6 +110,52 @@ ScreenManager:
                 size_hint_x: None
                 width: 80
                 on_press: root.manager.current = 'inicio'
+        BoxLayout:
+            orientation:'horizontal'
+            size_hint_y: None
+            height: 44
+            spacing: 10
+
+            Button:
+                id: Plato Principal
+                text:'Plato Principal'
+                size_hint_y: None
+                #width: 74
+                height: 44
+                on_press: root.seleccionar_categoria(self)
+
+            Button:
+                id: Entrada
+                text:'Entradas'
+                size_hint_y: None
+                #width: 74
+                height: 44
+                on_press: root.seleccionar_categoria(self)
+            
+            Button:
+                id: Postres
+                text:'Postres'
+                size_hint_y: None
+                #width: 74
+                height: 44
+                on_press: root.seleccionar_categoria(self)
+
+            Button:
+                id: Bebidas
+                text:'Bebidas'
+                size_hint_y: None
+                #width: 74
+                height: 44
+                on_press: root.seleccionar_categoria(self)
+
+            Button:
+                id: Platos Populares
+                text:'Platos Populares'
+                size_hint_y: None
+                #width: 74
+                height: 44
+                on_press: root.seleccionar_categoria(self)
+
 
         ScrollView:
             do_scroll_x: False

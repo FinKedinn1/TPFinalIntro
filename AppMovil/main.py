@@ -7,6 +7,7 @@ from kivy.uix.image import Image
 from kivy.lang import Builder
 from kivy.factory import Factory
 from kivy.core.text import LabelBase
+from urllib.parse import quote
 from datetime import datetime
 import json
 import os
@@ -35,6 +36,29 @@ class InicioScreen(Screen):
 
 
 class CartaScreen(Screen):
+    def seleccionar_categoria(self, boton):
+        if 'lista_platos' in self.ids:
+            self.ids.lista_platos.clear_widgets()
+
+        categoria = boton.text
+
+        categoria_filtrada = quote(categoria)
+        
+        if categoria != "Platos Populares":
+            UrlRequest(
+                f"{BASE_URL}/carta/categoria/{categoria_filtrada}",
+                on_success=self.platos_cargados_ok,
+                on_failure=lambda req, res: print("FAIL:", res),
+                on_error=lambda req, err: print("ERROR:", err)
+            )
+        else:
+            UrlRequest(
+                f"{BASE_URL}/menu/populares",
+                on_success=self.platos_cargados_ok,
+                on_failure=lambda req, res: print("FAIL:", res),
+                on_error=lambda req, err: print("ERROR:", err)
+            )
+
     def cargar_platos(self):
         if 'lista_platos' in self.ids:
             self.ids.lista_platos.clear_widgets()

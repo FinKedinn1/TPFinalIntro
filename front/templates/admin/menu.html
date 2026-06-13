@@ -19,6 +19,20 @@ administracion del menu
     <label for="precio">precio</label>
     <input type="number" id="precio" name="precio" required>
 </div>
+        <div class="form-group">
+            <label for="categoria">Categoría</label>
+            <select name="categoria" id="categoria" required>  
+                <option value="Plato Principal">Plato Principal</option> 
+                <option value="Entradas">Entrada</option>
+                <option value="Bebidas">Bebida</option>
+                <option value="Postres">Postre</option>
+                <option value="Populares">Platos Populares</option>
+            </select>
+        </div>
+<div class="form-group">
+    <label for="descripcion">descripción</label>
+    <textarea id="descripcion" name="descripcion" required></textarea>
+</div>
 <button type="submit">guardar plato</button>
 </form>
 </div>
@@ -29,6 +43,11 @@ administracion del menu
 {% for plato in platos %}
 <div class="item-plato">
 <p>{{ plato.nombre_plato }} - ${{ plato.precio }}</p>
+<p>{{ plato.categoria }}</p>
+<p>{{ plato.descripcion }}</p>
+<a href="{{ url_for('admin_menu_editar', id_plato=plato.id_plato) }}" class="btn-edit">
+        Editar
+    </a>
 </div>
 <form action="{{ url_for('admin_menu_borrar', id_plato=plato.id_plato) }}" method="POST" style="display:inline;">
 <button type="submit" onclick="return confirm('confirmar borrar plato');">Borrar</button>

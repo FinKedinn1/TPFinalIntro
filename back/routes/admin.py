@@ -47,3 +47,16 @@ def api_admin_menu_borrar(id_plato):
     connection.close()
     
     return jsonify({"mensaje": "Plato borrado exitosamente"}), 200
+
+@admin_bp.route("/admin/menu/<int:id_plato>", methods=["PUT"])
+def api_admin_menu_editar(id_plato):
+    datos = request.json
+
+    connection = get_db_connection()
+    cursor = connection.cursor()
+    query = "UPDATE carta SET nombre_plato=%s, precio=%s, categoria=%s, descripcion=%s WHERE id_plato=%s"
+    cursor.execute(query, (datos["nombre"], datos["precio"], datos["categoria"], datos["descripcion"], id_plato))
+    connection.commit()
+    cursor.close()
+    connection.close()
+    return jsonify({"mensaje": "Plato actualizado"}), 200

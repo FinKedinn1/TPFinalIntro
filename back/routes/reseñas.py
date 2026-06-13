@@ -123,3 +123,25 @@ def eliminar_reseña_id(id):
     connection.close()
 
     return {"Mensaje": "Reseña eliminada con exito"}, 200
+
+@reseñas_bp.route("/reseñas/<int:id>", methods=["PUT"])
+def editar_reseña(id):
+    data = request.json
+    
+    comentario = data.get("comentario")
+    puntaje = data.get("puntaje_estrellas")
+    connection = get_db_connection()
+    cursor = connection.cursor()
+    
+    query = """
+    UPDATE reseñas
+    SET comentario = %s, puntaje_estrellas = %s
+    WHERE id_reseña = %s
+    """
+    cursor.execute(query, (comentario, puntaje, id))
+
+    connection.commit()
+    cursor.close()
+    connection.close()
+
+    return {"Mensaje": "Reseña editada con exito"}, 200

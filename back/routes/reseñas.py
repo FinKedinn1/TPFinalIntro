@@ -113,22 +113,18 @@ def crear_reseña():
 def eliminar_reseña_id(id):
     connection = get_db_connection()
     cursor = connection.cursor()
-
     query = "DELETE FROM reseñas WHERE id_reseña = %s"
-
     cursor.execute(query, (id,))
-
     connection.commit()
     cursor.close()
     connection.close()
-
     return {"Mensaje": "Reseña eliminada con exito"}, 200
 
-@reseñas_bp.route("/reseñas/<int:id_reseña>", methods=["GET"])
-def obtener_reseña(id_reseña):
+@reseñas_bp.route("/reseñas/<int:id_resena>", methods=["GET"])
+def obtener_reseña(id_resena):
     connection = get_db_connection()
     cursor = connection.cursor()
-    cursor.execute("SELECT * FROM reseñas WHERE id_reseña = %s", (id_reseña,))
+    cursor.execute("SELECT * FROM reseñas WHERE id_reseña = %s", (id_resena,))
     reseña = cursor.fetchone()
     cursor.close()
     connection.close()

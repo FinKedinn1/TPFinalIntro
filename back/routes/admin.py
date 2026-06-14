@@ -61,25 +61,24 @@ def api_admin_menu_editar(id_plato):
     connection.close()
     return jsonify({"mensaje": "Plato actualizado"}), 200
 
-@admin_bp.route("/admin/reseñas/<int:id_reseña>", methods=["DELETE"])
-def api_admin_reseña_borrar(id_reseña):
+@admin_bp.route("/admin/reseñas/<int:id_resena>", methods=["DELETE"])
+def api_admin_resena_borrar(id_resena):
     connection = get_db_connection()
     cursor = connection.cursor()
-    cursor.execute("DELETE FROM reseñas WHERE id_reseña = %s", (id_reseña,))
+    cursor.execute("DELETE FROM reseñas WHERE id_reseña = %s", (id_resena,))
     connection.commit()
     cursor.close()
     connection.close()
-    
     return jsonify({"mensaje": "Reseña borrada exitosamente"}), 200
 
-@admin_bp.route("/admin/reseñas/<int:id_reseña>", methods=["PUT"])
-def api_admin_reseña_editar(id_reseña):
+@admin_bp.route("/admin/reseñas/<int:id_resena>", methods=["PUT"])
+def api_admin_resena_editar(id_resena):
     datos = request.json
 
     connection = get_db_connection()
     cursor = connection.cursor()
-    query = "UPDATE reseñas SET comentario = %s, puntaje_estrellas = %s WHERE id_reseña = %s"
-    cursor.execute(query, (datos["comentario"], datos["puntaje_estrellas"], id_reseña))
+    query = """ UPDATE reseñas SET comentario = %s, puntaje_estrellas = %s WHERE id_reseña = %s"""
+    cursor.execute(query, (datos["comentario"], datos["puntaje_estrellas"], id_resena))
     connection.commit()
     cursor.close()
     connection.close()

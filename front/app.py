@@ -135,7 +135,7 @@ def cancelar_reserva_front(id):
 @app.route("/reseñas", methods=["GET", "POST"])
 def reseñas():
 
-    response = requests.get(f"{API_BACKEND}/reseñas")
+    response = requests.get(f"{API_BACKEND}/resenias")
     reseñas = response.json()
 
     response_platos = requests.get(f"{API_BACKEND}/carta")
@@ -184,7 +184,7 @@ def reseñas():
             "puntaje_estrellas": int(puntaje_estrellas)
         }
 
-        respuesta = requests.post(f"{API_BACKEND}/reseñas", json=data)
+        respuesta = requests.post(f"{API_BACKEND}/resenias", json=data)
 
         if respuesta.status_code != 201:
             return render_template(
@@ -281,7 +281,7 @@ def admin_historial_reservas():
 
 @app.route("/admin/reseñas")
 def admin_reseñas():
-    respuesta = requests.get(f"{API_BACKEND}/reseñas")
+    respuesta = requests.get(f"{API_BACKEND}/resenias")
 
     lista_reseñas = respuesta.json()
     return render_template("admin/reseñas.html", reseñas=lista_reseñas)

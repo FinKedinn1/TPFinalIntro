@@ -3,7 +3,7 @@ from db import get_db_connection
 
 reseñas_bp = Blueprint("reseñas", __name__)
 
-@reseñas_bp.route("/reseñas", methods=["GET"])
+@reseñas_bp.route("/resenias", methods=["GET"])
 def mostrar_reseñas():
     connection = get_db_connection()
     cursor = connection.cursor()
@@ -25,7 +25,7 @@ def mostrar_reseñas():
 
     return jsonify(reseñas)
 
-@reseñas_bp.route("/reseñas", methods=["POST"])
+@reseñas_bp.route("/resenias", methods=["POST"])
 def crear_reseña():
     data = request.json
 
@@ -109,7 +109,7 @@ def crear_reseña():
         cursor.close()
         connection.close()
 
-@reseñas_bp.route("/reseñas/<int:id>", methods=["DELETE"])
+@reseñas_bp.route("/resenias/<int:id>", methods=["DELETE"])
 def eliminar_reseña_id(id):
     connection = get_db_connection()
     cursor = connection.cursor()

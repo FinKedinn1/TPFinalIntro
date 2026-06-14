@@ -2,7 +2,7 @@ from flask import Flask, render_template, redirect, url_for, request, session
 import requests
 import os
 
-API_BACKEND = os.environ.get("API_BACKEND", "http://127.0.0.1:5000")
+API_BACKEND = os.environ.get("API_BACKEND", "http://127.0.0.1:5002")
 app = Flask(__name__)
 app.secret_key = "clave_secreta"
 
@@ -73,12 +73,9 @@ def reservaciones():
     if request.method == "POST":
 
         if "usuario" not in session:
-            response = requests.get(f"{API_BACKEND}/reservas")
-            reservas = response.json()
-
             return render_template(
                 "reservas.html",
-                reservas=reservas,
+                reservas=[],
                 error="Debes iniciar sesión para reservar"
             )
 
@@ -97,7 +94,9 @@ def reservaciones():
         respuesta = requests.post(f"{API_BACKEND}/reservas",json=datos)
 
         if respuesta.status_code == 201:
-            response = requests.get(f"{API_BACKEND}/reservas")
+            id_usuario = session["usuario"]["id_usuario"]
+
+            response = requests.get(f"{API_BACKEND}/reservas/usuario/{id_usuario}")
             reservas = response.json()
             return render_template(
                 "reservas.html",
@@ -107,7 +106,9 @@ def reservaciones():
         
         data = respuesta.json()
 
-        response = requests.get(f"{API_BACKEND}/reservas")
+        id_usuario = session["usuario"]["id_usuario"]
+
+        response = requests.get(f"{API_BACKEND}/reservas/usuario/{id_usuario}")
         reservas = response.json()
 
         return render_template(
@@ -119,11 +120,26 @@ def reservaciones():
             cant_personas=cant_personas
         )
 
-    response = requests.get(f"{API_BACKEND}/reservas")
-    reservas = response.json()
-    
-    exito = request.args.get("exito") 
-    return render_template("reservas.html", reservas=reservas, exito=exito)
+    if "usuario" in session:
+
+        id_usuario = session["usuario"]["id_usuario"]
+
+        response = requests.get(
+            f"{API_BACKEND}/reservas/usuario/{id_usuario}"
+        )
+
+        reservas = response.json()
+
+    else:
+        reservas = []
+
+    exito = request.args.get("exito")
+
+    return render_template(
+        "reservas.html",
+        reservas=reservas,
+        exito=exito
+    )
 
 @app.route("/cancelar_reserva/<int:id>")
 def cancelar_reserva_front(id):

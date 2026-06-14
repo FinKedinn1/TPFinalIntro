@@ -8,7 +8,7 @@ const Botones = document.getElementsByClassName("boton-filtrar");
                 Botones[j].classList.remove("activo");
             }
             Botones[i].classList.add("activo");
-            const categoria_seleccionada = Botones[i].dataset.filter;
+            const categoria_seleccionada = Botones[i].getAttribute("data-filter");
 
             for (let k = 0; k < Platos.length; k++) {
                 const plato = Platos[k];

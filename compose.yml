@@ -7,7 +7,7 @@ services:
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_DATABASE: restaurante_db
+      MYSQL_DATABASE: restaurante_medieval
     ports:
       - "3306:3306"
     volumes:
@@ -25,7 +25,7 @@ services:
       - DB_HOST=db
       - DB_USER=root
       - DB_PASSWORD=rootpassword
-      - DB_NAME=restaurante_db
+      - DB_NAME=restaurante_medieval
     depends_on:
       - db
 

@@ -34,6 +34,7 @@ nav {
     display: flex;
     justify-content: center;
     align-items: center;
+
     padding: 15px 5%;
     box-sizing: border-box;
     z-index: 1000;
@@ -495,6 +496,11 @@ footer p {
   font-size: 0.95rem;
 }
 
+.imagen-menu {
+    width: 260px;
+    height: 200px;
+}
+
 .comida-escondida{
   display: none;
 }
@@ -601,4 +607,17 @@ footer p {
 
 .admin-header {
     text-align: center;
+}
+
+.boton-cancelar {
+    background-color: rgba(131, 7, 7, 0.9);
+    color: white;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    font-family: "Cinzel"; 
+    cursor: pointer;
+    text-decoration: none;
+    margin-top: 10px;
 }

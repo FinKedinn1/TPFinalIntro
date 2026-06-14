@@ -82,6 +82,11 @@ Reservas Activas
          Cantidad de personas:
         {{ reserva.cant_personas }}
     </p>
+    <a href="{{ url_for('cancelar_reserva_front', id=reserva.id_reserva) }}">
+       <button class="boton-cancelar">
+        Cancelar reserva
+        </button>   
+    </a>
 </div>
 
 {% endfor %}

@@ -3,7 +3,7 @@ import requests
 import os
 from functools import wraps
 
-API_BACKEND = os.environ.get("API_BACKEND", "http://127.0.0.1:5000")
+API_BACKEND = os.environ.get("API_BACKEND", "http://127.0.0.1:5002")
 app = Flask(__name__)
 app.secret_key = "clave_secreta"
 
@@ -74,12 +74,9 @@ def reservaciones():
     if request.method == "POST":
 
         if "usuario" not in session:
-            response = requests.get(f"{API_BACKEND}/reservas")
-            reservas = response.json()
-
             return render_template(
                 "reservas.html",
-                reservas=reservas,
+                reservas=[],
                 error="Debes iniciar sesión para reservar"
             )
 
@@ -98,7 +95,9 @@ def reservaciones():
         respuesta = requests.post(f"{API_BACKEND}/reservas",json=datos)
 
         if respuesta.status_code == 201:
-            response = requests.get(f"{API_BACKEND}/reservas")
+            id_usuario = session["usuario"]["id_usuario"]
+
+            response = requests.get(f"{API_BACKEND}/reservas/usuario/{id_usuario}")
             reservas = response.json()
             return render_template(
                 "reservas.html",
@@ -108,7 +107,9 @@ def reservaciones():
         
         data = respuesta.json()
 
-        response = requests.get(f"{API_BACKEND}/reservas")
+        id_usuario = session["usuario"]["id_usuario"]
+
+        response = requests.get(f"{API_BACKEND}/reservas/usuario/{id_usuario}")
         reservas = response.json()
 
         return render_template(
@@ -120,15 +121,38 @@ def reservaciones():
             cant_personas=cant_personas
         )
 
-    response = requests.get(f"{API_BACKEND}/reservas")
-    reservas = response.json()
+    if "usuario" in session:
 
-    return render_template("reservas.html", reservas=reservas)
+        id_usuario = session["usuario"]["id_usuario"]
+
+        response = requests.get(
+            f"{API_BACKEND}/reservas/usuario/{id_usuario}"
+        )
+
+        reservas = response.json()
+
+    else:
+        reservas = []
+
+    exito = request.args.get("exito")
+
+    return render_template(
+        "reservas.html",
+        reservas=reservas,
+        exito=exito
+    )
+
+@app.route("/cancelar_reserva/<int:id>")
+def cancelar_reserva_front(id):
+
+    requests.get(f"{API_BACKEND}/reservas/cancelar/{id}")
+
+    return redirect(url_for("reservaciones", exito="Reserva cancelada"))
 
 @app.route("/reseñas", methods=["GET", "POST"])
 def reseñas():
 
-    response = requests.get(f"{API_BACKEND}/reseñas")
+    response = requests.get(f"{API_BACKEND}/resenias")
     reseñas = response.json()
 
     response_platos = requests.get(f"{API_BACKEND}/carta")
@@ -177,7 +201,7 @@ def reseñas():
             "puntaje_estrellas": int(puntaje_estrellas)
         }
 
-        respuesta = requests.post(f"{API_BACKEND}/reseñas", json=data)
+        respuesta = requests.post(f"{API_BACKEND}/resenias", json=data)
 
         if respuesta.status_code != 201:
             return render_template(
@@ -191,6 +215,11 @@ def reseñas():
         return redirect(url_for("reseñas"))
 
     return render_template("reseñas.html", reseñas=reseñas, platos=platos, reservas_usuario=reservas_usuario)
+
+
+@app.route("/contacto")
+def contacto():
+    return render_template("contacto.html")
 
 @app.errorhandler(404)
 def pagina_no_encontrada(error):
@@ -282,7 +311,7 @@ def admin_historial_reservas():
 @app.route("/admin/reseñas")
 @admin_required
 def admin_reseñas():
-    respuesta = requests.get(f"{API_BACKEND}/reseñas")
+    respuesta = requests.get(f"{API_BACKEND}/resenias")
 
     lista_reseñas = respuesta.json()
     return render_template("admin/reseñas.html", reseñas=lista_reseñas)

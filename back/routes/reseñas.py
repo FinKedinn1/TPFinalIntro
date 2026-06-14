@@ -123,3 +123,13 @@ def eliminar_reseña_id(id):
     connection.close()
 
     return {"Mensaje": "Reseña eliminada con exito"}, 200
+
+@reseñas_bp.route("/reseñas/<int:id_reseña>", methods=["GET"])
+def obtener_reseña(id_reseña):
+    connection = get_db_connection()
+    cursor = connection.cursor()
+    cursor.execute("SELECT * FROM reseñas WHERE id_reseña = %s", (id_reseña,))
+    reseña = cursor.fetchone()
+    cursor.close()
+    connection.close()
+    return jsonify(reseña)

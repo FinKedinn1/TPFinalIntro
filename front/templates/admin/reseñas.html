@@ -14,7 +14,10 @@
          <div>
              <p>Puntaje: {{ reseña.puntaje_estrellas }} estrellas</p>
              <p>{{ reseña.comentario }}</p>
-             <button>eliminar</button>
+             <a href="{{ url_for('admin_reseña_editar', id_reseña=reseña.id_reseña) }}" class="btn-edit">Editar</a>
+             <form action="{{ url_for('admin_reseña_eliminar', id_reseña=reseña.id_reseña) }}" method="POST" style="display:inline;"> 
+             <button type = "submit" onclick="return confirm('Confirmar eliminacion de reseña');">Eliminar</button>
+             </form>
              <hr>
          </div>
          {% else %}

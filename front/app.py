@@ -287,6 +287,29 @@ def admin_reseñas():
     lista_reseñas = respuesta.json()
     return render_template("admin/reseñas.html", reseñas=lista_reseñas)
 
+@app.route("/admin/reseñas/eliminar/<int:id_reseña>", methods=["POST"])
+@admin_required
+def admin_reseña_eliminar(id_reseña):
+    requests.delete(f"{API_BACKEND}/admin/reseñas/{id_reseña}")
+    return redirect(url_for("admin_reseñas"))
+
+@app.route("/admin/reseñas/editar/<int:id_reseña>", methods=["GET", "POST"])
+@admin_required
+def admin_reseña_editar(id_reseña):
+    if request.method == "POST":
+        datos_reseña = {
+            "comentario": request.form.get("comentario"),
+            "puntaje_estrellas": int(request.form.get("puntaje_estrellas"))
+        }
+
+        requests.put(f"{API_BACKEND}/admin/reseñas/{id_reseña}", json=datos_reseña)
+
+        return redirect(url_for("admin_reseñas"))
+
+    respuesta = requests.get(f"{API_BACKEND}/reseñas/{id_reseña}")
+    reseña = respuesta.json()
+    return render_template("admin/editar_reseña.html", reseña=reseña)
+
 @app.route("/admin/menu/borrar/<int:id_plato>", methods=["POST"])
 @admin_required
 def admin_menu_borrar(id_plato):

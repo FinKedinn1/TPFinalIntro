@@ -312,6 +312,21 @@ class ReseniaScreen(Screen):
             self.platos_map[texto] = r
 
         self.ids.drop_platos.values = lista
+        self.ids.filtro_platos.values = lista
+    
+    def filtrar_platos(self):
+        if 'lista_resenias' in self.ids:
+            self.ids.lista_resenias.clear_widgets()
+
+        datos = self.ids.filtro_platos.text
+        datos = datos.split("-")
+
+        id_plato = datos[0]
+
+        UrlRequest(
+            f"{BASE_URL}/resenias/carta/{id_plato}",
+            on_success=self.resenias_cargadas_ok
+        )
 
     def cargar_resenias(self):
         if 'lista_resenias' in self.ids:
@@ -339,6 +354,9 @@ class ReseniaScreen(Screen):
             return
 
         resenias = result
+        
+        print("resultado: ", resenias)
+        print("tipo", type(resenias))
 
         for resenia in resenias:
             plato = resenia.get('nombre_plato') if isinstance(resenia, dict) else resenia[2]
@@ -346,6 +364,11 @@ class ReseniaScreen(Screen):
 
             texto_resenia = f"{plato} - {comentario}"
             
+            
+            #print("plato: ",plato)
+            #print("comentario: ", comentario)
+            #print("texto: ", texto_resenia)
+
             item = Factory.ReseniaItem()
             item.texto = texto_resenia
 

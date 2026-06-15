@@ -129,3 +129,28 @@ def obtener_reseña(id_resena):
     cursor.close()
     connection.close()
     return jsonify(reseña)
+
+@reseñas_bp.route("/resenias/carta/<int:id_plato>", methods=["GET"])
+def obtener_reseña_plato(id_plato):
+    connection = get_db_connection()
+    cursor = connection.cursor()
+
+    query = """
+    SELECT
+        reseñas.*,
+        carta.nombre_plato
+    FROM reseñas
+    JOIN carta
+        ON reseñas.id_plato = carta.id_plato
+    WHERE reseñas.id_plato = %s
+    ORDER BY fecha DESC
+    """
+
+
+    cursor.execute(query, (id_plato,))
+
+    reseña = cursor.fetchall()
+
+    cursor.close()
+    connection.close()
+    return jsonify(reseña)

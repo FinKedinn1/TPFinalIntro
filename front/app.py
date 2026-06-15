@@ -3,7 +3,7 @@ import requests
 import os
 from functools import wraps
 
-API_BACKEND = os.environ.get("API_BACKEND", "http://127.0.0.1:5002")
+API_BACKEND = os.environ.get("API_BACKEND", "http://127.0.0.1:5000")
 app = Flask(__name__)
 app.secret_key = "clave_secreta"
 

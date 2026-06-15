@@ -477,36 +477,52 @@ ScreenManager:
                 size_hint_x: None
                 width: 80
                 on_press: root.manager.current = 'principal'
-        
-        Spinner:
-            id: drop_reservas
-            text: "Eliga la reserva a reseñar"
+        BoxLayout:
+            orientation:'horizontal'
             size_hint_y: None
             height: 44
-        
-        Spinner:
-            id: drop_platos
-            text: "Eliga el plato a reseñar"
-            size_hint_y: None
-            height: 44
+            spacing: 10
+            Spinner:
+                id: drop_reservas
+                text: "Eliga la reserva a reseñar"
+                size_hint_y: None
+                height: 44
+            
+            Spinner:
+                id: drop_platos
+                text: "Eliga el plato a reseñar"
+                size_hint_y: None
+                height: 44
 
-        Spinner:
-            id: puntuacion
-            text: "Eliga un puntaje del 1 al 5"
+        BoxLayout:
+            orientation:'horizontal'
             size_hint_y: None
             height: 44
+            spacing: 10
+            Spinner:
+                id: puntuacion
+                text: "Eliga un puntaje del 1 al 5"
+                size_hint_y: None
+                height: 44
 
-        TextInput:
-            id: comentario_input
-            hint_text: 'Escriba un comentario sobre la comida'
-            size_hint_y: None
-            height:44
+            TextInput:
+                id: comentario_input
+                hint_text: 'Escriba un comentario sobre la comida'
+                size_hint_y: None
+                height:44
 
         Button:
             text: 'Confirmar Reseña'
             size_hint_y: None
             height: 44
             on_press: root.crear_resenia(comentario_input.text)
+
+        Spinner:
+            id: filtro_platos
+            text: "Eliga un plato para filtrar reseñas"
+            size_hint_y: None
+            height: 44
+            on_text: root.filtrar_platos()
 
         ScrollView:
             do_scroll_x: False

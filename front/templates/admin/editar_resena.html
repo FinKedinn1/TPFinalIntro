@@ -17,19 +17,19 @@
             id="puntaje_estrellas"
             required>
             <option value="1"
-            {% if reseña.puntaje_estrellas == 1 %}selected{% endif %}>1 estrella
+            {% if resena.puntaje_estrellas == 1 %}selected{% endif %}>1 estrella
             </option>
             <option value="2"
-            {% if reseña.puntaje_estrellas == 2 %}selected{% endif %}>2 estrellas
+            {% if resena.puntaje_estrellas == 2 %}selected{% endif %}>2 estrellas
             </option>
             <option value="3"
-            {% if reseña.puntaje_estrellas == 3 %}selected{% endif %}>3 estrellas
+            {% if resena.puntaje_estrellas == 3 %}selected{% endif %}>3 estrellas
             </option>
             <option value="4"
-            {% if reseña.puntaje_estrellas == 4 %}selected{% endif %}>4 estrellas
+            {% if resena.puntaje_estrellas == 4 %}selected{% endif %}>4 estrellas
             </option>
             <option value="5"
-            {% if reseña.puntaje_estrellas == 5 %}selected{% endif %}>5 estrellas
+            {% if resena.puntaje_estrellas == 5 %}selected{% endif %}>5 estrellas
             </option>
         </select>
     </div>
@@ -40,10 +40,10 @@
         <textarea
             id="comentario"
             name="comentario"
-            required>{{ reseña.comentario }}</textarea>
+            required>{{ resena.comentario }}</textarea>
     </div>
     <button type="submit" class="btn-save">Guardar Cambios</button>
-    <a href="{{ url_for('admin_reseñas') }}"
+    <a href="{{ url_for('admin_resenas') }}"
        class="btn-cancel">Cancelar</a>
 </form>
 </div>

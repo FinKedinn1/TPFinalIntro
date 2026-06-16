@@ -22,7 +22,7 @@
         </div>
         {% endif %}
 
-        <form method="POST" class="medieval-form" action="/reseñas">
+        <form method="POST" class="medieval-form" action="/resenas">
             
             <div class="form-group">
                 <label for="id_reserva">Reserva</label>
@@ -102,13 +102,13 @@
   
     <div id="contenedor-reseñas">
 
-        {% for reseña in reseñas %}
+        {% for resena in resenas %}
 
-        <div class="parchment-card reseña" info-plato="{{ reseña.nombre_plato }}">
-            <p><strong>Comentario:</strong> {{ reseña.comentario }}</p>
-            <p><strong>⭐</strong> {{ reseña.puntaje_estrellas }}</p>
-            {% if reseña.nombre_plato %}
-            <p><strong>Plato:</strong> {{ reseña.nombre_plato }}</p>
+        <div class="parchment-card reseña" info-plato="{{ resena.nombre_plato }}">
+            <p><strong>Comentario:</strong> {{ resena.comentario }}</p>
+            <p><strong>⭐</strong> {{ resena.puntaje_estrellas }}</p>
+            {% if resena.nombre_plato %}
+            <p><strong>Plato:</strong> {{ resena.nombre_plato }}</p>
             {% endif %}
         </div>
 
@@ -119,6 +119,6 @@
 </section>
 
 
-<script src="{{ url_for('static', filename='js/reseñas.js') }}"></script>
+<script src="{{ url_for('static', filename='js/resenas.js') }}"></script>
 
 {% endblock %}

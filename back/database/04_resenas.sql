@@ -2,8 +2,8 @@ CREATE DATABASE IF NOT EXISTS restaurante_medieval;
 
 USE restaurante_medieval;
 
-CREATE TABLE IF NOT EXISTS reseñas (
-    id_reseña INT AUTO_INCREMENT PRIMARY KEY,
+CREATE TABLE IF NOT EXISTS resenas (
+    id_resena INT AUTO_INCREMENT PRIMARY KEY,
     id_reserva INT NOT NULL,
     id_plato INT NOT NULL,
     fecha DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -14,3 +14,5 @@ CREATE TABLE IF NOT EXISTS reseñas (
     FOREIGN KEY (id_plato)
     REFERENCES carta(id_plato)
 );
+
+

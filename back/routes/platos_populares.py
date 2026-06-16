@@ -16,7 +16,7 @@ def platos_populares():
     SELECT
         carta.*,
         platos_populares.promedio_estrellas,
-        platos_populares.cantidad_reseñas
+        platos_populares.cantidad_resenas
     FROM platos_populares
     INNER JOIN carta
         ON platos_populares.id_plato = carta.id_plato
@@ -46,7 +46,7 @@ def actualizar_platos_populares():
         INSERT INTO platos_populares (
             id_plato,
             promedio_estrellas,
-            cantidad_reseñas,
+            cantidad_resenas,
             es_popular
         )
         SELECT
@@ -57,7 +57,7 @@ def actualizar_platos_populares():
                 WHEN SUM(puntaje_estrellas) / COUNT(*) >= %s THEN TRUE
                 ELSE FALSE
             END
-        FROM reseñas
+        FROM resenas
         GROUP BY id_plato
         """
 

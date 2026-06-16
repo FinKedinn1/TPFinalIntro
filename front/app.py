@@ -149,11 +149,11 @@ def cancelar_reserva_front(id):
 
     return redirect(url_for("reservaciones", exito="Reserva cancelada"))
 
-@app.route("/reseñas", methods=["GET", "POST"])
-def reseñas():
+@app.route("/resenas", methods=["GET", "POST"])
+def resenas():
 
-    response = requests.get(f"{API_BACKEND}/resenias")
-    reseñas = response.json()
+    response = requests.get(f"{API_BACKEND}/resenas")
+    resenas = response.json()
 
     response_platos = requests.get(f"{API_BACKEND}/carta")
     platos = response_platos.json()
@@ -173,8 +173,8 @@ def reseñas():
 
         if "usuario" not in session:
             return render_template(
-                "reseñas.html",
-                reseñas=reseñas,
+                "resenas.html",
+                resenas=resenas,
                 platos=platos,
                 error="Debes iniciar sesión para dejar una reseña."
             )
@@ -186,8 +186,8 @@ def reseñas():
 
         if not puntaje_estrellas:
             return render_template(
-                "reseñas.html",
-                reseñas=reseñas,
+                "resenas.html",
+                resenas=resenas,
                 platos=platos,
                 reservas_usuario=reservas_usuario,
                 error="Debes seleccionar una cantidad de estrellas."
@@ -201,20 +201,20 @@ def reseñas():
             "puntaje_estrellas": int(puntaje_estrellas)
         }
 
-        respuesta = requests.post(f"{API_BACKEND}/resenias", json=data)
+        respuesta = requests.post(f"{API_BACKEND}/resenas", json=data)
 
         if respuesta.status_code != 201:
             return render_template(
-                "reseñas.html",
-                reseñas=reseñas,
+                "resenas.html",
+                resenas=resenas,
                 platos=platos,
                 reservas_usuario=reservas_usuario,
-                error="Debes reservar para poder dejar una reseña."
+                error="Debes reservar para poder dejar una resena."
             )
 
-        return redirect(url_for("reseñas"))
+        return redirect(url_for("resenas"))
 
-    return render_template("reseñas.html", reseñas=reseñas, platos=platos, reservas_usuario=reservas_usuario)
+    return render_template("resenas.html", resenas=resenas, platos=platos, reservas_usuario=reservas_usuario)
 
 
 @app.route("/contacto")
@@ -308,36 +308,36 @@ def admin_historial_reservas():
     historial_reservas = respuesta.json()
     return render_template("admin/historial_reservas.html", historial_reservas=historial_reservas)
 
-@app.route("/admin/reseñas")
+@app.route("/admin/resenas")
 @admin_required
-def admin_reseñas():
-    respuesta = requests.get(f"{API_BACKEND}/resenias")
+def admin_resenas():
+    respuesta = requests.get(f"{API_BACKEND}/resenas")
 
-    lista_reseñas = respuesta.json()
-    return render_template("admin/reseñas.html", reseñas=lista_reseñas)
+    lista_resenas = respuesta.json()
+    return render_template("admin/resenas.html", resenas=lista_resenas)
 
-@app.route("/admin/reseñas/eliminar/<int:id_resena>", methods=["POST"])
+@app.route("/admin/resenas/eliminar/<int:id_resena>", methods=["POST"])
 @admin_required
 def admin_resena_eliminar(id_resena):
-    requests.delete(f"{API_BACKEND}/admin/reseñas/{id_resena}")
-    return redirect(url_for("admin_reseñas"))
+    requests.delete(f"{API_BACKEND}/admin/resenas/{id_resena}")
+    return redirect(url_for("admin_resenas"))
 
-@app.route("/admin/reseñas/editar/<int:id_resena>", methods=["GET", "POST"])
+@app.route("/admin/resenas/editar/<int:id_resena>", methods=["GET", "POST"])
 @admin_required
 def admin_resena_editar(id_resena):
     if request.method == "POST":
-        datos_reseña = {
+        datos_resena = {
             "comentario": request.form.get("comentario"),
             "puntaje_estrellas": int(request.form.get("puntaje_estrellas"))
         }
 
-        requests.put(f"{API_BACKEND}/admin/reseñas/{id_resena}", json=datos_reseña)
+        requests.put(f"{API_BACKEND}/admin/resenas/{id_resena}", json=datos_resena)
 
-        return redirect(url_for("admin_reseñas"))
+        return redirect(url_for("admin_resenas"))
 
-    respuesta = requests.get(f"{API_BACKEND}/reseñas/{id_resena}")
-    reseña = respuesta.json()
-    return render_template("admin/editar_reseña.html", reseña=reseña)
+    respuesta = requests.get(f"{API_BACKEND}/resenas/{id_resena}")
+    resena = respuesta.json()
+    return render_template("admin/editar_resena.html", resena=resena)
 
 @app.route("/admin/menu/borrar/<int:id_plato>", methods=["POST"])
 @admin_required

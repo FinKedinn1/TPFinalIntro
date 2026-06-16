@@ -1,32 +1,32 @@
 from flask import Blueprint, jsonify, request
 from db import get_db_connection
 
-reseñas_bp = Blueprint("reseñas", __name__)
+resenas_bp = Blueprint("resenas", __name__)
 
-@reseñas_bp.route("/resenias", methods=["GET"])
-def mostrar_reseñas():
+@resenas_bp.route("/resenas", methods=["GET"])
+def mostrar_resenas():
     connection = get_db_connection()
     cursor = connection.cursor()
     query = """
     SELECT
-        reseñas.*,
+        resenas.*,
         carta.nombre_plato
-    FROM reseñas
+    FROM resenas
     JOIN carta
-        ON reseñas.id_plato = carta.id_plato
+        ON resenas.id_plato = carta.id_plato
     ORDER BY fecha DESC
     """
 
     cursor.execute(query)
-    reseñas = cursor.fetchall()
+    resenas = cursor.fetchall()
 
     cursor.close()
     connection.close()
 
-    return jsonify(reseñas)
+    return jsonify(resenas)
 
-@reseñas_bp.route("/resenias", methods=["POST"])
-def crear_reseña():
+@resenas_bp.route("/resenas", methods=["POST"])
+def crear_resena():
     data = request.json
 
     id_reserva = data.get("id_reserva")
@@ -65,7 +65,7 @@ def crear_reseña():
             connection.close()
             return {"Error": "La reserva no existe"}, 404
 
-        sql = "INSERT INTO reseñas (id_reserva, comentario, puntaje_estrellas, id_plato) VALUES (%s, %s, %s, %s)"
+        sql = "INSERT INTO resenas (id_reserva, comentario, puntaje_estrellas, id_plato) VALUES (%s, %s, %s, %s)"
 
         cursor.execute(sql, (id_reserva, comentario, puntaje, id_plato))
 
@@ -76,7 +76,7 @@ def crear_reseña():
             INSERT INTO platos_populares (
                 id_plato,
                 promedio_estrellas,
-                cantidad_reseñas,
+                cantidad_resenas,
                 es_popular
             )
             SELECT
@@ -88,7 +88,7 @@ def crear_reseña():
                     THEN TRUE
                     ELSE FALSE
                 END
-            FROM reseñas
+            FROM resenas
             GROUP BY id_plato
             """)
 
@@ -109,48 +109,48 @@ def crear_reseña():
         cursor.close()
         connection.close()
 
-@reseñas_bp.route("/resenias/<int:id>", methods=["DELETE"])
-def eliminar_reseña_id(id):
+@resenas_bp.route("/resenas/<int:id>", methods=["DELETE"])
+def eliminar_resena_id(id):
     connection = get_db_connection()
     cursor = connection.cursor()
-    query = "DELETE FROM reseñas WHERE id_reseña = %s"
+    query = "DELETE FROM resenas WHERE id_resena = %s"
     cursor.execute(query, (id,))
     connection.commit()
     cursor.close()
     connection.close()
     return {"Mensaje": "Reseña eliminada con exito"}, 200
 
-@reseñas_bp.route("/reseñas/<int:id_resena>", methods=["GET"])
-def obtener_reseña(id_resena):
+@resenas_bp.route("/resenas/<int:id_resena>", methods=["GET"])
+def obtener_resena(id_resena):
     connection = get_db_connection()
     cursor = connection.cursor()
-    cursor.execute("SELECT * FROM reseñas WHERE id_reseña = %s", (id_resena,))
-    reseña = cursor.fetchone()
+    cursor.execute("SELECT * FROM resenas WHERE id_resena = %s", (id_resena,))
+    resena = cursor.fetchone()
     cursor.close()
     connection.close()
-    return jsonify(reseña)
+    return jsonify(resena)
 
-@reseñas_bp.route("/resenias/carta/<int:id_plato>", methods=["GET"])
-def obtener_reseña_plato(id_plato):
+@resenas_bp.route("/resenas/carta/<int:id_plato>", methods=["GET"])
+def obtener_resena_plato(id_plato):
     connection = get_db_connection()
     cursor = connection.cursor()
 
     query = """
     SELECT
-        reseñas.*,
+        resenas.*,
         carta.nombre_plato
-    FROM reseñas
+    FROM resenas
     JOIN carta
-        ON reseñas.id_plato = carta.id_plato
-    WHERE reseñas.id_plato = %s
+        ON resenas.id_plato = carta.id_plato
+    WHERE resenas.id_plato = %s
     ORDER BY fecha DESC
     """
 
 
     cursor.execute(query, (id_plato,))
 
-    reseña = cursor.fetchall()
+    resena = cursor.fetchall()
 
     cursor.close()
     connection.close()
-    return jsonify(reseña)
+    return jsonify(resena)

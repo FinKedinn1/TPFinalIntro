@@ -10,12 +10,12 @@
 <section class="reseñas-section">
      <div class="parchment-card">
          <h2>reseña aceptada</h2>
-         {% for reseña in reseñas %}
+         {% for resena in resenas %}
          <div>
-             <p>Puntaje: {{ reseña.puntaje_estrellas }} estrellas</p>
-             <p>{{ reseña.comentario }}</p>
-            <a href="{{ url_for('admin_resena_editar', id_resena=reseña.id_reseña) }}" class="btn-edit">Editar</a>
-            <form action="{{ url_for('admin_resena_eliminar', id_resena=reseña.id_reseña) }}" method="POST" style="display:inline;">
+             <p>Puntaje: {{ resena.puntaje_estrellas }} estrellas</p>
+             <p>{{ resena.comentario }}</p>
+            <a href="{{ url_for('admin_resena_editar', id_resena=resena.id_resena) }}" class="btn-edit">Editar</a>
+            <form action="{{ url_for('admin_resena_eliminar', id_resena=resena.id_resena) }}" method="POST" style="display:inline;">
                <button type="submit" onclick="return confirm('Confirmar eliminacion de reseña');">Eliminar</button>
             </form>
 

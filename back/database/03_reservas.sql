@@ -12,3 +12,5 @@ CREATE TABLE IF NOT EXISTS reservas (
     estado VARCHAR(20) DEFAULT 'activa',
     FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario)
 );
+
+

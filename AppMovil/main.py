@@ -13,7 +13,8 @@ import json
 import os
 
 def obtener_url_backend():
-    ruta_config = 'config.json'
+    directorio_actual = os.path.dirname(os.path.abspath(__file__))
+    ruta_config = os.path.join(directorio_actual, 'config.json')
     if not os.path.exists(ruta_config):
         return 'http://127.0.0.1:5000'
         
@@ -73,29 +74,44 @@ class CartaScreen(Screen):
     def platos_cargados_ok(self, req, result):
         if 'lista_platos' not in self.ids:
             return
-            
-        platos = result
+        if isinstance(result, (str, bytes)):
+            try:
+                platos = json.load(archivo) if hasattr(result, 'read') else json.loads(resut)
+            except Exception as e:
+                print("Error decodificando JSON:", e)
+                platos = []
+        else:
+            platos = result
+
         if not platos:
             self.ids.lista_platos.add_widget(Label(text="No hay platos disponibles hoy.", size_hint_y=None, height=40))
             return
 
         for plato in platos:
-            if isinstance(plato, dict):
-                nombre = plato.get('nombre_plato', 'Plato sin nombre')
-                precio = plato.get('precio', '')
-            else:
-                nombre = plato[1]
-                precio = plato[3] if len(plato) > 3 else ""
+            try:
+            
+                if isinstance(plato, dict):
+                    nombre = plato.get('nombre_plato', 'Plato sin nombre')
+                    precio = plato.get('precio', '')
+                elif isinstance(plato, (list, tuple)):
 
-            imagen_url = f"assets/images/{nombre}.jpg"
+                    nombre = plato[1] if len(plato) > 1 else 'Plato sin nombre'
+                    precio = plato[3] if len(plato) > 3 else ""
+                else:
+                    continue
 
-            texto_plato = f"{nombre} - ${precio}" if precio else f"{nombre}"
+                imagen_url = f"assets/images/{nombre}.jpg"
 
-            item = Factory.CartaItem()
-            item.texto = texto_plato
-            item.imagen = imagen_url
+                texto_plato = f"{nombre} - ${precio}" if precio else f"{nombre}"
 
-            self.ids.lista_platos.add_widget(item)
+                item = Factory.CartaItem()
+                item.texto = texto_plato
+                item.imagen = imagen_url
+
+                self.ids.lista_platos.add_widget(item)
+            except Exception as e:
+                print("Error procesando plato individual", e)
+            
 
     def error_carga(self, req, error):
         if 'lista_platos' in self.ids:
@@ -228,24 +244,43 @@ class ReservasScreen(Screen):
     def reservas_cargadas_ok(self, req, result):
         if 'lista_reservas' not in self.ids:
             return
-        
-        if not result:
+            
+        if isinstance(result, (str, bytes)):
+            try:
+                reservas = json.loads(result)
+            except Exception as e:
+                print("Error decodificando JSON de reservas:", e)
+                reservas = []
+        else:
+            reservas = result
+
+        if not reservas:
             self.ids.lista_reservas.add_widget(Label(text="No tienes reservas activas.", size_hint_y=None, height=40))
             return
-        
-        reservas = result
 
         for reserva in reservas:
-            fecha = reserva.get('fecha_reserva') if isinstance(reserva, dict) else reserva[2]
-            hora = reserva.get('turno') if isinstance(reserva, dict) else reserva[3]
-            cantidad = reserva.get('cant_personas') if isinstance(reserva, dict) else reserva[4]
-            estado = reserva.get('estado') if isinstance(reserva, dict) else reserva[5]
-            texto_reserva = f"{fecha} a las {hora} - {cantidad} personas - {estado}"
-            
-            item = Factory.ReseniaItem()
-            item.texto = texto_reserva
+            try:
+                if isinstance(reserva, dict):
+                    fecha = reserva.get('fecha_reserva', '')
+                    hora = reserva.get('turno', '')
+                    cantidad = reserva.get('cant_personas', '')
+                    estado = reserva.get('estado', '')
+                elif isinstance(reserva, (list, tuple)):
+                    fecha = reserva[2] if len(reserva) > 2 else ''
+                    hora = reserva[3] if len(reserva) > 3 else ''
+                    cantidad = reserva[4] if len(reserva) > 4 else ''
+                    estado = reserva[5] if len(reserva) > 5 else ''
+                else:
+                    continue
 
-            self.ids.lista_reservas.add_widget(item)
+                texto_reserva = f"{fecha} a las {hora} - {cantidad} personas - {estado}"
+                
+                item = Factory.ReseniaItem()
+                item.texto = texto_reserva
+
+                self.ids.lista_reservas.add_widget(item)
+            except Exception as e:
+                print("Error procesando reserva individual:", e)
 
     def error_carga(self, req, error):
         if 'lista_reservas' in self.ids:
@@ -344,35 +379,42 @@ class ReseniaScreen(Screen):
             return
         
         self.cargar_reservas()
-
         self.ids.puntuacion.values = [str(i) for i in range(1,6)]
-
         self.cargar_platos()
 
-        if not result:
+        
+        if isinstance(result, (str, bytes)):
+            try:
+                resenias = json.loads(result)
+            except Exception as e:
+                print("Error decodificando JSON de reseñas:", e)
+                resenias = []
+        else:
+            resenias = result
+
+        if not resenias:
             self.ids.lista_resenias.add_widget(Label(text="No has dejado reseñas aún.", size_hint_y=None, height=40))
             return
 
-        resenias = result
-        
-        print("resultado: ", resenias)
-        print("tipo", type(resenias))
-
         for resenia in resenias:
-            plato = resenia.get('nombre_plato') if isinstance(resenia, dict) else resenia[2]
-            comentario = resenia.get('comentario') if isinstance(resenia, dict) else resenia[3]
+            try:
+                if isinstance(resenia, dict):
+                    plato = resenia.get('nombre_plato', 'Plato sin nombre')
+                    comentario = resenia.get('comentario', '')
+                elif isinstance(resenia, (list, tuple)):
+                    plato = resenia[2] if len(resenia) > 2 else 'Plato sin nombre'
+                    comentario = resenia[3] if len(resenia) > 3 else ''
+                else:
+                    continue
 
-            texto_resenia = f"{plato} - {comentario}"
-            
-            
-            #print("plato: ",plato)
-            #print("comentario: ", comentario)
-            #print("texto: ", texto_resenia)
+                texto_resenia = f"{plato} - {comentario}"
+                
+                item = Factory.ReseniaItem()
+                item.texto = texto_resenia
 
-            item = Factory.ReseniaItem()
-            item.texto = texto_resenia
-
-            self.ids.lista_resenias.add_widget(item)
+                self.ids.lista_resenias.add_widget(item)
+            except Exception as e:
+                print("Error procesando reseña individual:", e)
             
     def error_carga(self, req, error):
         if 'lista_resenias' in self.ids:

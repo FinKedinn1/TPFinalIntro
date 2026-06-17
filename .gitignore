@@ -29,3 +29,10 @@ Thumbs.db
 
 # Archivos temporales
 *.tmp
+
+.buildozer/
+bin/
+venv/
+.venv/
+__pycache__/
+*.apk

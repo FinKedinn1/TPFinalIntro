@@ -27,6 +27,8 @@ services:
       - DB_USER=root
       - DB_PASSWORD=rootpassword
       - DB_NAME=restaurante_medieval
+      - EMAIL_RESERVAS=no.contestar.restaurante@gmail.com
+      - EMAIL_RESERVAS_CONTRASENIA=guvc hjeb aqey rtzp
     depends_on:
       - db
 
